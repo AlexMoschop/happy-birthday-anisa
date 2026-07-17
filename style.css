@@ -1,0 +1,431 @@
+/* ============================================================
+   happy birthday — kawaii stationery card
+   ============================================================ */
+
+:root{
+  --cream:#FAF7F0;
+  --gingham-blue:#CDE6F0;
+  --gingham-pink:#F7D9E3;
+  --soft-pink:#F5B8C9;
+  --soft-purple:#C9B8E8;
+  --soft-yellow:#F7E8B5;
+  --soft-green:#BFDFC4;
+  --ink:#3D3833;
+  --card-white:#FFFFFF;
+
+  --hand:'Gochi Hand', 'Patrick Hand', cursive;
+  --hand2:'Patrick Hand', cursive;
+  --body:'Quicksand', 'Nunito', sans-serif;
+
+  --shadow:0 8px 22px rgba(61,56,51,.12);
+  --radius:20px;
+}
+
+*{box-sizing:border-box;}
+html,body{margin:0;height:100%;}
+body{
+  font-family:var(--body);
+  color:var(--ink);
+  background:var(--cream);
+  overflow:hidden;               /* scenes control scroll */
+  -webkit-tap-highlight-color:transparent;
+}
+
+/* ---------- shared ink stroke for doodles ---------- */
+.ink-stroke{
+  stroke:var(--ink);
+  stroke-width:3;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+/* ---------- typography ---------- */
+.hand-xl{
+  font-family:var(--hand);
+  font-weight:400;
+  font-size:clamp(2rem,7vw,3.4rem);
+  line-height:1.15;
+  margin:0 0 1.4rem;
+  text-transform:lowercase;
+}
+.hand-md{
+  font-family:var(--hand);
+  font-size:clamp(1.4rem,5vw,2rem);
+  margin:0 0 1.1rem;
+  text-transform:lowercase;
+}
+
+/* ============================================================
+   scenes
+   ============================================================ */
+.scene{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  opacity:0;
+  visibility:hidden;
+  transform:translateY(14px);
+  transition:opacity .4s ease, transform .4s ease, visibility .4s;
+  overflow:hidden;
+}
+.scene.is-active{
+  opacity:1;
+  visibility:visible;
+  transform:none;
+}
+.scene__inner{
+  position:relative;
+  z-index:2;
+  text-align:center;
+  max-width:640px;
+  width:100%;
+}
+
+#confetti{
+  position:absolute;inset:0;z-index:1;
+  width:100%;height:100%;
+  pointer-events:none;
+}
+
+/* backgrounds */
+.scene--cream{background:var(--cream);}
+.scene--gingham-blue{background:var(--gingham-blue);}
+.scene--gingham-pink{background:var(--gingham-pink);}
+
+/* gingham built from layered gradients */
+.scene--gingham-blue,
+.scene--gingham-pink{
+  --g: rgba(255,255,255,.55);
+  background-image:
+    linear-gradient(var(--g) 0 0),
+    linear-gradient(var(--g) 0 0);
+  background-repeat:repeat;
+  background-size:44px 44px;
+}
+.scene--gingham-blue{
+  background-color:var(--gingham-blue);
+  background-image:
+    repeating-linear-gradient(90deg, transparent 0 11px, rgba(255,255,255,.45) 11px 22px),
+    repeating-linear-gradient(0deg, transparent 0 11px, rgba(255,255,255,.45) 11px 22px);
+}
+.scene--gingham-pink{
+  background-color:var(--gingham-pink);
+  background-image:
+    repeating-linear-gradient(90deg, transparent 0 11px, rgba(255,255,255,.5) 11px 22px),
+    repeating-linear-gradient(0deg, transparent 0 11px, rgba(255,255,255,.5) 11px 22px);
+}
+
+/* ============================================================
+   doodles scattered on backgrounds
+   ============================================================ */
+.doodle-field{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  overflow:hidden;
+}
+.doodle{
+  position:absolute;
+  width:26px;height:26px;
+  animation:twinkle 4s ease-in-out infinite;
+  will-change:transform,opacity;
+}
+.doodle svg{width:100%;height:100%;display:block;}
+@keyframes twinkle{
+  0%,100%{transform:translateY(0) rotate(var(--r,0deg)) scale(1);opacity:.9;}
+  50%{transform:translateY(-8px) rotate(var(--r,0deg)) scale(1.12);opacity:.6;}
+}
+
+/* ============================================================
+   buttons / pills
+   ============================================================ */
+.pill{
+  font-family:var(--hand2);
+  font-size:1.15rem;
+  text-transform:lowercase;
+  color:var(--ink);
+  background:var(--card-white);
+  border:2px solid var(--ink);
+  border-radius:999px;
+  padding:.5rem 1.4rem;
+  cursor:pointer;
+  transition:transform .15s ease, background .2s ease;
+  box-shadow:var(--shadow);
+}
+.pill:hover{transform:scale(1.05);}
+.pill:active{transform:scale(.92);}
+.pill--dodgy{position:relative;}
+
+.btn-row{
+  display:flex;
+  gap:1rem;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-bottom:1.5rem;
+}
+
+.bunny{width:120px;height:110px;margin:0 auto;display:block;}
+
+/* ============================================================
+   cards
+   ============================================================ */
+.card{
+  background:var(--card-white);
+  border:2px solid var(--ink);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:2rem 1.6rem;
+}
+.card--tap{
+  display:inline-flex;
+  flex-direction:column;
+  align-items:center;
+  max-width:340px;
+  margin:0 auto;
+}
+.card--msg{
+  max-width:460px;
+  margin:0 auto;
+  font-size:1.1rem;
+  line-height:1.6;
+}
+.card--msg p{margin:0;}
+
+.cake-btn{
+  border:none;background:none;cursor:pointer;padding:6px;
+  transition:transform .2s ease;
+}
+.cake-btn:hover{transform:scale(1.06) rotate(-2deg);}
+.cake-btn:active{transform:scale(.95);}
+.cake{width:150px;height:150px;}
+
+/* flames hidden until lit */
+.flame{opacity:0;transform-origin:center bottom;transition:opacity .3s ease;}
+.cake.is-lit .flame{opacity:1;animation:flicker .5s ease-in-out infinite alternate;}
+@keyframes flicker{from{transform:scale(1);}to{transform:scale(1.14) translateY(-1px);}}
+
+.hint{font-family:var(--hand2);font-size:1.05rem;opacity:.8;margin-top:1.4rem;}
+
+/* ============================================================
+   entrance animations
+   ============================================================ */
+.fade-up{
+  opacity:0;
+  transform:translateY(16px);
+  animation:fadeUp .6s ease forwards;
+  animation-delay:var(--d,0s);
+}
+@keyframes fadeUp{to{opacity:1;transform:none;}}
+
+.bounce-in{
+  opacity:0;
+  transform:scale(.6);
+  animation:bounceIn .7s cubic-bezier(.2,1.4,.5,1) forwards;
+  animation-delay:var(--d,0s);
+}
+@keyframes bounceIn{
+  60%{opacity:1;transform:scale(1.08);}
+  100%{opacity:1;transform:scale(1);}
+}
+
+.wiggle{animation:wiggle 3.5s ease-in-out infinite;}
+@keyframes wiggle{
+  0%,100%{transform:rotate(-3deg);}
+  50%{transform:rotate(3deg);}
+}
+
+/* ============================================================
+   chrome buttons (menu / freebie / mute)
+   ============================================================ */
+.chrome{position:fixed;z-index:40;}
+.chrome--menu{top:16px;left:16px;}
+.chrome--mute{
+  top:16px;left:120px;
+  background:var(--card-white);
+  border:2px solid var(--ink);
+  border-radius:999px;
+  width:44px;height:44px;
+  font-size:1.1rem;cursor:pointer;
+  box-shadow:var(--shadow);
+  transition:transform .15s ease;
+}
+.chrome--mute:hover{transform:scale(1.05);}
+.chrome--freebie{
+  bottom:20px;right:20px;
+  background:var(--soft-purple);
+  font-size:1.2rem;
+}
+.bob{animation:bob 2.2s ease-in-out infinite;}
+@keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-9px);}}
+
+/* ============================================================
+   scrim + sidebar
+   ============================================================ */
+.scrim{
+  position:fixed;inset:0;z-index:50;
+  background:rgba(61,56,51,.35);
+  opacity:0;transition:opacity .3s ease;
+}
+.scrim.is-on{opacity:1;}
+
+.sidebar{
+  position:fixed;top:0;left:0;bottom:0;z-index:60;
+  width:min(360px,86vw);
+  background:var(--cream);
+  border-right:2px solid var(--ink);
+  box-shadow:var(--shadow);
+  transform:translateX(-102%);
+  transition:transform .4s cubic-bezier(.3,.9,.3,1);
+  padding:20px;
+  overflow-y:auto;
+  background-image:
+    repeating-linear-gradient(90deg, transparent 0 11px, rgba(245,184,201,.18) 11px 22px),
+    repeating-linear-gradient(0deg, transparent 0 11px, rgba(245,184,201,.18) 11px 22px);
+}
+.sidebar.is-open{transform:none;}
+.sidebar__head{
+  display:flex;align-items:center;justify-content:space-between;
+}
+.sidebar__sub{
+  font-family:var(--hand2);opacity:.7;margin:.2rem 0 1.2rem;
+}
+.pill--x{
+  width:40px;height:40px;padding:0;font-size:1.4rem;line-height:1;
+  display:grid;place-items:center;
+}
+
+.menu-list{list-style:none;margin:0;padding:0;display:grid;gap:12px;}
+.menu-item{
+  display:flex;align-items:center;gap:12px;
+  background:var(--card-white);
+  border:2px solid var(--ink);
+  border-radius:16px;
+  padding:.7rem 1rem;
+  cursor:pointer;
+  font-family:var(--hand2);font-size:1.2rem;
+  transition:transform .15s ease, background .2s ease;
+  text-align:left;width:100%;
+}
+.menu-item:hover{transform:translateX(4px);background:var(--soft-yellow);}
+.menu-item .ico{width:30px;height:30px;flex:0 0 auto;}
+
+/* ============================================================
+   overlays (detail + freebie)
+   ============================================================ */
+.overlay{
+  position:fixed;inset:0;z-index:70;
+  background:var(--cream);
+  overflow:hidden;
+  opacity:0;visibility:hidden;
+  transform:translateY(18px);
+  transition:opacity .35s ease, transform .35s ease, visibility .35s;
+}
+.overlay.is-open{opacity:1;visibility:visible;transform:none;}
+.overlay__scroll{
+  position:relative;z-index:2;
+  height:100%;overflow-y:auto;
+  padding:24px 20px 80px;
+  max-width:720px;margin:0 auto;
+}
+
+.overlay--freebie{
+  background-color:#EDE7F8;
+  background-image:
+    repeating-linear-gradient(90deg, transparent 0 11px, rgba(201,184,232,.5) 11px 22px),
+    repeating-linear-gradient(0deg, transparent 0 11px, rgba(201,184,232,.5) 11px 22px);
+}
+
+/* detail view content */
+.detail-back{margin-bottom:1rem;}
+.video-wrap{
+  position:relative;
+  aspect-ratio:16/9;
+  width:100%;
+  border:2px solid var(--ink);
+  border-radius:var(--radius);
+  overflow:hidden;
+  background:var(--card-white);
+  box-shadow:var(--shadow);
+}
+.video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+.coming-soon{
+  width:100%;height:100%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:.6rem;font-family:var(--hand);font-size:1.5rem;text-align:center;
+  color:var(--ink);
+}
+.coming-soon svg{width:70px;height:70px;}
+
+.recipe-title{font-family:var(--hand);font-size:1.9rem;margin:1.4rem 0 .3rem;}
+.recipe-card{margin-top:1rem;}
+.recipe-card h4{
+  font-family:var(--hand);font-size:1.5rem;margin:0 0 .6rem;font-weight:400;
+}
+.check-list{list-style:none;margin:0 0 1rem;padding:0;display:grid;gap:.5rem;}
+.check-list li{display:flex;align-items:center;gap:.6rem;font-size:1.05rem;}
+.check-list input{position:absolute;opacity:0;width:0;height:0;}
+.heart-box{
+  width:26px;height:26px;flex:0 0 auto;cursor:pointer;
+  transition:transform .15s ease;
+}
+.heart-box:hover{transform:scale(1.15);}
+.heart-box path{fill:var(--card-white);stroke:var(--ink);stroke-width:2;}
+.check-list input:checked + .heart-box path{fill:var(--soft-pink);}
+.check-list label{cursor:pointer;display:flex;align-items:center;gap:.6rem;}
+.check-list input:checked ~ .txt{text-decoration:line-through;opacity:.55;}
+
+.step-list{margin:0;padding-left:1.3rem;display:grid;gap:.55rem;}
+.step-list li{font-size:1.05rem;line-height:1.5;padding-left:.2rem;}
+
+/* freebie grid */
+.freebie__title{margin-top:.4rem;}
+.freebie__sub{font-family:var(--hand2);opacity:.75;margin:-.6rem 0 1.4rem;}
+.freebie__close{position:fixed;top:16px;right:16px;z-index:80;}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:16px;
+}
+.f-card{
+  background:var(--card-white);
+  border:2px solid var(--ink);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  display:flex;flex-direction:column;
+}
+.f-card__title{
+  font-family:var(--hand2);font-size:1.15rem;
+  padding:.7rem 1rem;border-top:2px solid var(--ink);
+}
+
+/* ============================================================
+   footer
+   ============================================================ */
+.footer{
+  position:fixed;bottom:8px;left:0;right:0;z-index:30;
+  text-align:center;
+  font-family:var(--hand2);font-size:.95rem;opacity:.65;
+  pointer-events:none;
+}
+
+/* ============================================================
+   responsive
+   ============================================================ */
+@media (max-width:600px){
+  .sidebar{width:100vw;border-right:none;}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));}
+  .chrome--mute{left:auto;right:16px;top:16px;}
+  .chrome--freebie{bottom:16px;}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation:none !important;transition:none !important;}
+  .scene{opacity:1;visibility:visible;transform:none;}
+  .scene:not(.is-active){display:none;}
+  .fade-up,.bounce-in{opacity:1 !important;transform:none !important;}
+}

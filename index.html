@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>happy birthday!!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Patrick+Hand&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎂</text></svg>" />
+</head>
+<body>
+
+<!-- ============ doodle sprite definitions (hidden) ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- 4-point sparkle star -->
+    <g id="d-star">
+      <path d="M12 1 C13.4 8.2 15.8 10.6 23 12 C15.8 13.4 13.4 15.8 12 23 C10.6 15.8 8.2 13.4 1 12 C8.2 10.6 10.6 8.2 12 1 Z"/>
+    </g>
+    <!-- heart -->
+    <g id="d-heart">
+      <path d="M12 21 C4 15.5 2 11.6 2 8.4 A5.4 5.4 0 0 1 12 5.6 A5.4 5.4 0 0 1 22 8.4 C22 11.6 20 15.5 12 21 Z"/>
+    </g>
+    <!-- cherries -->
+    <g id="d-cherry">
+      <path d="M12 3 C9 7 6.5 9.5 6.5 13" fill="none"/>
+      <path d="M12 3 C15 7 17.5 9.5 17.5 13" fill="none"/>
+      <path d="M12 3 c3-2.6 6.4-2.2 8.4-.4 -2.6 1.6-5.8 1.8-8.4.4z"/>
+      <circle cx="6.5" cy="17" r="4"/>
+      <circle cx="17.5" cy="17" r="4"/>
+    </g>
+    <!-- music note -->
+    <g id="d-note">
+      <path d="M9 18V4l10-2v14" fill="none"/>
+      <circle cx="6" cy="18" r="3"/>
+      <circle cx="16" cy="16" r="3"/>
+    </g>
+  </defs>
+</svg>
+
+<!-- ============ scene 1 : the question ============ -->
+<section class="scene scene--cream is-active" id="scene1">
+  <div class="doodle-field" data-doodles="stars"></div>
+  <div class="scene__inner">
+    <h1 class="hand-xl fade-up">i have a surprise for you,<br />wanna see it?</h1>
+    <div class="btn-row fade-up" style="--d:.15s">
+      <button class="pill" id="btnYes">yes!!</button>
+      <button class="pill pill--dodgy" id="btnNo">no thanks.</button>
+    </div>
+    <!-- cute generic bunny doodle -->
+    <svg class="bunny wiggle fade-up" style="--d:.3s" viewBox="0 0 120 110" aria-hidden="true">
+      <g class="ink-stroke" fill="var(--card-white)">
+        <path d="M40 48c-4-14-8-26-4-33 4-6 10 3 13 16"/>
+        <path d="M80 48c4-14 8-26 4-33-4-6-10 3-13 16"/>
+        <ellipse cx="60" cy="70" rx="30" ry="26"/>
+      </g>
+      <g fill="var(--ink)">
+        <ellipse cx="49" cy="68" rx="2.6" ry="3.4"/>
+        <ellipse cx="71" cy="68" rx="2.6" ry="3.4"/>
+      </g>
+      <path class="ink-stroke" fill="none" d="M56 77q4 4 8 0"/>
+      <g fill="var(--soft-pink)" opacity=".75">
+        <ellipse cx="41" cy="76" rx="5" ry="3"/>
+        <ellipse cx="79" cy="76" rx="5" ry="3"/>
+      </g>
+    </svg>
+  </div>
+</section>
+
+<!-- ============ scene 2 : tap the cake ============ -->
+<section class="scene scene--gingham-blue" id="scene2">
+  <div class="doodle-field" data-doodles="cherries"></div>
+  <div class="scene__inner">
+    <div class="card card--tap fade-up">
+      <p class="hand-md">tap on the cake to<br />open your gift!</p>
+      <button class="cake-btn" id="cakeBtn" aria-label="open your gift">
+        <svg class="cake" viewBox="0 0 120 120" aria-hidden="true">
+          <!-- candles -->
+          <g class="candles">
+            <g class="flame" data-flame="1">
+              <path d="M45 28c0-5 5-6 5-11 3 3 5 6 5 11a5 5 0 0 1-10 0z" fill="var(--soft-yellow)" stroke="#E8A33D" stroke-width="2" stroke-linejoin="round"/>
+            </g>
+            <g class="flame" data-flame="2">
+              <path d="M65 28c0-5 5-6 5-11 3 3 5 6 5 11a5 5 0 0 1-10 0z" fill="var(--soft-yellow)" stroke="#E8A33D" stroke-width="2" stroke-linejoin="round"/>
+            </g>
+            <rect x="46" y="32" width="8" height="16" rx="3" fill="var(--soft-pink)" class="ink-stroke"/>
+            <rect x="66" y="32" width="8" height="16" rx="3" fill="var(--soft-green)" class="ink-stroke"/>
+          </g>
+          <!-- frosting top -->
+          <path class="ink-stroke" fill="var(--card-white)"
+                d="M26 56q6-10 12 0t12 0 12 0 12 0 12 0 12 0v10H26z"/>
+          <!-- upper tier -->
+          <rect x="26" y="64" width="68" height="18" rx="6" fill="var(--soft-pink)" class="ink-stroke"/>
+          <!-- lower tier -->
+          <rect x="20" y="80" width="80" height="22" rx="8" fill="var(--soft-yellow)" class="ink-stroke"/>
+          <!-- face -->
+          <g fill="var(--ink)">
+            <ellipse cx="48" cy="89" rx="2.4" ry="3.2"/>
+            <ellipse cx="72" cy="89" rx="2.4" ry="3.2"/>
+          </g>
+          <path class="ink-stroke" fill="none" d="M56 94q4 3.5 8 0"/>
+          <g fill="var(--soft-pink)" opacity=".8">
+            <ellipse cx="38" cy="94" rx="4.5" ry="2.6"/>
+            <ellipse cx="82" cy="94" rx="4.5" ry="2.6"/>
+          </g>
+        </svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ scene 3 : the reveal ============ -->
+<section class="scene scene--gingham-pink" id="scene3">
+  <div class="doodle-field" data-doodles="party"></div>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+  <div class="scene__inner">
+    <h1 class="hand-xl bounce-in" id="hbdText">happy birthday!! 🎂</h1>
+    <div class="card card--msg bounce-in" style="--d:.25s">
+      <!-- BIRTHDAY_MESSAGE -->
+      <p>another year of you being the funniest, kindest, most chaotic
+         person i know. thank you for every voice note, every snack run,
+         and every 2am conversation. i hope this year is soft and sweet
+         and full of good food. eat cake for me!! ♡</p>
+      <!-- /BIRTHDAY_MESSAGE -->
+    </div>
+    <p class="hint bounce-in" style="--d:.4s">psst — check the <b>menu ♡</b> and the <b>freebie 💜</b> 👀</p>
+  </div>
+</section>
+
+<!-- ============ chrome : menu / sidebar / freebie ============ -->
+<button class="pill chrome chrome--menu" id="menuBtn" hidden>menu ♡</button>
+<button class="pill chrome chrome--freebie bob" id="freebieBtn" hidden>freebie 💜</button>
+<button class="chrome chrome--mute" id="muteBtn" hidden aria-label="toggle sound">🔊</button>
+
+<div class="scrim" id="scrim" hidden></div>
+
+<aside class="sidebar" id="sidebar" aria-hidden="true">
+  <div class="sidebar__head">
+    <h2 class="hand-md">the menu ♡</h2>
+    <button class="pill pill--x" id="menuClose" aria-label="close menu">×</button>
+  </div>
+  <p class="sidebar__sub">her food vlogs + recipes</p>
+  <ul class="menu-list" id="menuList"></ul>
+</aside>
+
+<section class="overlay" id="detail" aria-hidden="true">
+  <div class="overlay__scroll" id="detailBody"></div>
+</section>
+
+<section class="overlay overlay--freebie" id="freebie" aria-hidden="true">
+  <div class="doodle-field" data-doodles="purple"></div>
+  <button class="pill pill--x freebie__close" id="freebieClose" aria-label="close">×</button>
+  <div class="overlay__scroll">
+    <h2 class="hand-xl freebie__title">freebie zone 💜</h2>
+    <p class="freebie__sub">just because you deserve it</p>
+    <div class="grid" id="freebieGrid"></div>
+  </div>
+</section>
+
+<footer class="footer" id="footer" hidden></footer>
+
+<script src="script.js"></script>
+</body>
+</html>
