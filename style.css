@@ -96,15 +96,6 @@ body{
 .scene--gingham-pink{background:var(--gingham-pink);}
 
 /* gingham built from layered gradients */
-.scene--gingham-blue,
-.scene--gingham-pink{
-  --g: rgba(255,255,255,.55);
-  background-image:
-    linear-gradient(var(--g) 0 0),
-    linear-gradient(var(--g) 0 0);
-  background-repeat:repeat;
-  background-size:44px 44px;
-}
 .scene--gingham-blue{
   background-color:var(--gingham-blue);
   background-image:
@@ -243,17 +234,6 @@ body{
    ============================================================ */
 .chrome{position:fixed;z-index:40;}
 .chrome--menu{top:16px;left:16px;}
-.chrome--mute{
-  top:16px;left:120px;
-  background:var(--card-white);
-  border:2px solid var(--ink);
-  border-radius:999px;
-  width:44px;height:44px;
-  font-size:1.1rem;cursor:pointer;
-  box-shadow:var(--shadow);
-  transition:transform .15s ease;
-}
-.chrome--mute:hover{transform:scale(1.05);}
 .chrome--freebie{
   bottom:20px;right:20px;
   background:var(--soft-purple);
@@ -419,7 +399,6 @@ body{
 @media (max-width:600px){
   .sidebar{width:100vw;border-right:none;}
   .grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));}
-  .chrome--mute{left:auto;right:16px;top:16px;}
   .chrome--freebie{bottom:16px;}
 }
 

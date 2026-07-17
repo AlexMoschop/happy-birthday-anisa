@@ -4,7 +4,7 @@
    ============================================================ */
 
 /* --- her name (used in the reveal + footer) --- */
-const FRIEND_NAME = "[NAME]";
+const FRIEND_NAME = "Anisa";
 
 /* --- menu: 7 food vlogs + recipes.
        Replace name/emoji, paste the YouTube video id (the part
@@ -82,6 +82,13 @@ const $ = (s) => document.querySelector(s);
 
 const isPlaceholder = (id) => !id || id.startsWith("YOUTUBE_ID");
 
+/* escape config text before it goes through innerHTML — a stray quote in a
+   recipe line must not corrupt the markup */
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) =>
+  ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+const REDUCED_MOTION = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
 /* ---------- fill in the name ---------- */
 $("#hbdText").textContent = `happy birthday ${FRIEND_NAME}!! 🎂`;
 const footer = $("#footer");
@@ -138,10 +145,18 @@ function showScene(id) {
 /* ---------- scene 1: dodgy "no thanks." button ---------- */
 const btnNo = $("#btnNo");
 function dodge() {
-  const dx = (Math.random() * 160 - 80) | 0;
-  const dy = (Math.random() * 120 - 60) | 0;
+  let dx = (Math.random() * 160 - 80) | 0;
+  let dy = (Math.random() * 120 - 60) | 0;
+  // keep the runaway button fully on-screen (phones are narrow)
+  const r = btnNo.getBoundingClientRect();
+  const pad = 8;
+  const base = { left: r.left - curDx, top: r.top - curDy };
+  dx = Math.min(Math.max(dx, pad - base.left), innerWidth - r.width - pad - base.left);
+  dy = Math.min(Math.max(dy, pad - base.top), innerHeight - r.height - pad - base.top);
+  curDx = dx; curDy = dy;
   btnNo.style.transform = `translate(${dx}px, ${dy}px)`;
 }
+let curDx = 0, curDy = 0;
 btnNo.addEventListener("mouseenter", dodge);
 btnNo.addEventListener("touchstart", (e) => { e.preventDefault(); dodge(); }, { passive: false });
 btnNo.addEventListener("click", dodge); // just in case she catches it
@@ -161,7 +176,6 @@ $("#cakeBtn").addEventListener("click", () => {
     startConfetti();
     $("#menuBtn").hidden = false;
     $("#freebieBtn").hidden = false;
-    $("#muteBtn").hidden = false;
   }, 900);
 });
 
@@ -210,6 +224,9 @@ function spawnDrifter() {
   });
 }
 
+const CONFETTI_DRIFT_MS = 45000;   // stop feeding new drifters after 45s
+let confettiStartedAt = 0;
+
 function tickConfetti() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   particles = particles.filter((p) => p.life > 0 && p.y < canvas.height + 20);
@@ -226,30 +243,41 @@ function tickConfetti() {
     ctx.globalAlpha = Math.max(p.life, 0);
     ctx.fillStyle = p.color;
     ctx.beginPath();
-    // rounded confetto
-    const r = 2;
-    ctx.roundRect(-p.w / 2, -p.h / 2, p.w, p.h, r);
+    // rounded confetto (roundRect is missing on Safari < 16.4)
+    if (ctx.roundRect) ctx.roundRect(-p.w / 2, -p.h / 2, p.w, p.h, 2);
+    else ctx.rect(-p.w / 2, -p.h / 2, p.w, p.h);
     ctx.fill();
     ctx.restore();
   }
-  if (Math.random() < 0.06) spawnDrifter(); // subtle looping drift
+  const drifting = Date.now() - confettiStartedAt < CONFETTI_DRIFT_MS;
+  if (drifting && Math.random() < 0.06) spawnDrifter();
+  if (!drifting && particles.length === 0) { confettiRunning = false; return; }
   if (confettiRunning) requestAnimationFrame(tickConfetti);
 }
 
 function startConfetti() {
-  if (confettiRunning) return;
+  if (confettiRunning || REDUCED_MOTION) return;
   confettiRunning = true;
+  confettiStartedAt = Date.now();
   spawnBurst(140);
   setTimeout(() => spawnBurst(80), 350);
   requestAnimationFrame(tickConfetti);
 }
 
+/* pause the loop while the tab is hidden; resume where it left off */
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    confettiRunning = false;
+  } else if (revealed && particles.length > 0 && !confettiRunning && !REDUCED_MOTION) {
+    confettiRunning = true;
+    requestAnimationFrame(tickConfetti);
+  }
+});
+
 /* ---------- chime (WebAudio, no files needed) ---------- */
-let muted = false;
 let audioCtx = null;
 
 function playChime() {
-  if (muted) return;
   try {
     audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
     const notes = [523.25, 659.25, 783.99, 1046.5]; // C E G C — a happy little arpeggio
@@ -268,11 +296,6 @@ function playChime() {
     });
   } catch (_) { /* no audio? no problem */ }
 }
-
-$("#muteBtn").addEventListener("click", () => {
-  muted = !muted;
-  $("#muteBtn").textContent = muted ? "🔇" : "🔊";
-});
 
 /* ---------- svg helpers ---------- */
 const CAMERA_SVG = `
@@ -311,8 +334,8 @@ function videoBlock(videoId, title) {
   }
   return `<div class="video-wrap">
     <iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}"
-      title="${title}" loading="lazy" allowfullscreen
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+      title="${esc(title)}" loading="lazy" allowfullscreen
+      allow="encrypted-media; picture-in-picture"></iframe>
   </div>`;
 }
 
@@ -326,7 +349,7 @@ MENU_ITEMS.forEach((item, i) => {
   const li = document.createElement("li");
   const btn = document.createElement("button");
   btn.className = "menu-item";
-  btn.innerHTML = `${FOOD_ICON(i)}<span>${item.name} ${item.emoji}</span>`;
+  btn.innerHTML = `${FOOD_ICON(i)}<span>${esc(item.name)} ${esc(item.emoji)}</span>`;
   btn.addEventListener("click", () => openDetail(i));
   li.appendChild(btn);
   menuList.appendChild(li);
@@ -352,15 +375,16 @@ function openDetail(i) {
   const item = MENU_ITEMS[i];
   const ing = item.recipe.ingredients.map((x, j) => `
     <li><label>
-      <input type="checkbox" id="ing-${i}-${j}">
+      <input type="checkbox" id="ing-${i}-${j}" data-key="ing-${i}-${j}"
+             ${localStorage.getItem("bday-ing-" + i + "-" + j) ? "checked" : ""}>
       ${HEART_CHECK}
-      <span class="txt">${x}</span>
+      <span class="txt">${esc(x)}</span>
     </label></li>`).join("");
-  const steps = item.recipe.steps.map((x) => `<li>${x}</li>`).join("");
+  const steps = item.recipe.steps.map((x) => `<li>${esc(x)}</li>`).join("");
 
   $("#detailBody").innerHTML = `
     <button class="pill detail-back" id="detailBack">← back to menu</button>
-    <h3 class="recipe-title">${item.name} ${item.emoji}</h3>
+    <h3 class="recipe-title">${esc(item.name)} ${esc(item.emoji)}</h3>
     ${videoBlock(item.videoId, item.name)}
     <div class="card recipe-card">
       <h4>ingredients</h4>
@@ -368,6 +392,15 @@ function openDetail(i) {
       <h4>steps</h4>
       <ol class="step-list">${steps}</ol>
     </div>`;
+  // remember ticked ingredients across visits (cook-along survives navigation)
+  $("#detailBody").querySelectorAll(".check-list input").forEach((box) => {
+    box.addEventListener("change", () => {
+      const key = "bday-" + box.dataset.key;
+      try {
+        box.checked ? localStorage.setItem(key, "1") : localStorage.removeItem(key);
+      } catch (_) { /* private mode — no persistence, no crash */ }
+    });
+  });
   $("#detailBack").addEventListener("click", () => {
     detail.classList.remove("is-open");
     detail.setAttribute("aria-hidden", "true");
@@ -381,15 +414,23 @@ function openDetail(i) {
 /* ---------- freebie zone ---------- */
 const freebie = $("#freebie");
 const grid = $("#freebieGrid");
+let freebieBuilt = false;
 
-FREEBIE_VIDEOS.forEach((v) => {
-  const card = document.createElement("div");
-  card.className = "f-card";
-  card.innerHTML = `${videoBlock(v.videoId, v.title)}<div class="f-card__title">${v.title} 💜</div>`;
-  grid.appendChild(card);
-});
+/* built on first open, not at page load — 7 YouTube players in a hidden
+   overlay would otherwise download on page load once real IDs are set */
+function buildFreebieGrid() {
+  if (freebieBuilt) return;
+  freebieBuilt = true;
+  FREEBIE_VIDEOS.forEach((v) => {
+    const card = document.createElement("div");
+    card.className = "f-card";
+    card.innerHTML = `${videoBlock(v.videoId, v.title)}<div class="f-card__title">${esc(v.title)} 💜</div>`;
+    grid.appendChild(card);
+  });
+}
 
 $("#freebieBtn").addEventListener("click", () => {
+  buildFreebieGrid();
   freebie.classList.add("is-open");
   freebie.setAttribute("aria-hidden", "false");
 });
