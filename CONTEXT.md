@@ -10,10 +10,10 @@ Written for whoever (human or model) picks this up next.
 **Live:** https://alexmoschop.github.io/happy-birthday-anisa/
 **Repo:** https://github.com/AlexMoschop/happy-birthday-anisa (public, owner `AlexMoschop`)
 **Local:** `C:\Users\User1\Downloads\birthday-site`
-**Last commit:** `4100ed1` — "phase 2: real vlogs, photo gallery, note card and hidden letter"
+**Last commit:** `1ef1031` — "phase 3: three more vlogs, renames, recipes removed"
 
-Status: **phase 2 complete.** Real media is in, deployed, verified live on a
-375px viewport. See §10 for what phase 2 changed.
+Status: **phase 3 complete.** 7 vlogs + the note card, deployed, verified live on
+a 375px viewport. See §10 for phase 2 and §11 for phase 3.
 
 > The old `birthday-site` repo still exists on GitHub with the placeholder
 > version, and is still wired up as the git remote `old-birthday-site`.
@@ -73,7 +73,8 @@ in `style.css` (`--cream`, `--gingham-blue`, `--soft-pink`, `--soft-purple`, …
   `winget` during this session. `gh` lives at `/c/Program Files/GitHub CLI` and may
   need adding to `PATH` in new shells:
   `export PATH="$PATH:/c/Program Files/GitHub CLI"`
-- **ffmpeg / ffprobe are NOT installed** on this machine (checked, absent from PATH).
+- **ffmpeg / ffprobe ARE installed** (added via winget in phase 2) but are **not on
+  `PATH`** — call them by full path, see §11.
 
 ---
 
@@ -87,6 +88,10 @@ python -m http.server 8123 --directory birthday-site
 ```
 
 Then open `http://localhost:8123`. Serve from `C:\Users\User1\Downloads`.
+
+⚠️ Ports 8123 and 8124 hold **stale cached copies of `script.js`** in the preview
+browser. Use the `birthday-site-phase3` config (port **8125**), or add a new port,
+whenever you need to trust what you're looking at — see §11.
 
 ---
 
@@ -146,11 +151,8 @@ Architect. Full output saved to:
 
 ## 6. Outstanding / next steps
 
-1. **Menu labels are placeholders.** `MENU_ITEMS[].name` is currently the vlog
-   filename (`jarred`, `nandini`, `prithvish`, `the mystery vlog`) with an
-   arbitrary food emoji. Alex said he'd rename these himself.
-2. **The recipes are still Claude's joke filler.** They sit under each vlog and
-   read as generic. Either write real ones or delete the `recipe` key.
+1. ~~Menu labels are placeholders.~~ Done in phase 3 (§11).
+2. ~~The recipes are still Claude's joke filler.~~ Deleted in phase 3 (§11).
 3. The reveal message in `index.html` (between `<!-- BIRTHDAY_MESSAGE -->` and
    `<!-- /BIRTHDAY_MESSAGE -->`) is **still draft text written by Claude**, not
    Alex's own words. The note card and the letter *are* his verbatim words.
@@ -288,3 +290,83 @@ The typewriter had to be driven manually in testing, because
 **Screenshots were unavailable all session** — the Browser pane was never
 displayed, so `computer{action:"screenshot"}` timed out every time. Everything
 above was verified through the DOM and the network log, *not by eye*.
+
+---
+
+## 11. Phase 3 (recipes out, renames, three more vlogs)
+
+Requested by Alex: delete the recipes, rename two menu entries, add three clips,
+push.
+
+### What changed
+
+- **Recipes deleted.** `MENU_ITEMS` entries are now one-liners
+  (`name`/`emoji`/`video`/`poster`) — no `recipe` key. `openDetail()` renders just
+  the title + player, and the ingredient-checkbox `localStorage` code, the
+  `HEART_CHECK` svg and ~20 lines of `.recipe-card`/`.check-list`/`.step-list` CSS
+  went with it. `.recipe-title` is kept — it's the vlog's name above the player.
+- **`the mystery vlog` → `nosa`.** The files were renamed too
+  (`git mv vid-20260722-wa0010.* nosa.*`), so the old asset path now 404s.
+- **`a little note` → `om`.** Label only; the note card's text is unchanged.
+- **Added `mirna`, `kevin`, `daniel`** — menu is now 7 vlogs + the note.
+- Sidebar sub-line was "the food vlogs + recipes" → "tap one to watch ♡".
+
+> Names were kept **lowercase** (`nosa`, `om`) to match the existing entries and
+> the site's lowercase styling. Alex wrote them capitalised in the request — trivial
+> to change in `MENU_ITEMS` if he'd rather have `Nosa` / `Om`.
+
+### Encoding the three new clips
+
+Sources were in `C:\Users\User1\Downloads` (not `media/`), and they are **big**:
+
+| Source | Shipped | Settings |
+|---|---|---|
+| `Mirna.mp4` 768 MB, 660×1174 @60fps, 6:22 | `mirna.mp4` 20.8 MB | 720p, CRF **30**, 30fps |
+| `Kevin.mov` 270 MB, 1080×1920 @60fps, 2:58 | `kevin.mp4` 9.2 MB | 720p, CRF 28, 30fps |
+| `Daniel.MOV` 377 MB, **3840×2160**, 1:19 | `daniel.mp4` 11.2 MB | 720p, CRF 28, 30fps |
+
+All three were HEVC at 60fps or 4K. Two things worth remembering:
+
+- **Capping to `-r 30` is what keeps these small.** The phase-2 recipe alone would
+  have shipped 60fps files at roughly double the size for no visible gain.
+- **`Daniel.MOV` carries `rotation: -180` metadata.** ffmpeg autorotates on decode,
+  so no `transpose` filter is needed — but *check the poster frame by eye* after
+  encoding, because a wrong rotation looks fine to every automated check. All three
+  posters were opened and confirmed upright.
+
+ffmpeg is installed but **still not on `PATH`** in Git Bash. Full path:
+`C:\Users\User1\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_*\ffmpeg-8.1.2-full_build\bin\`
+
+⚠️ `scripts-build-media.ps1` **will not regenerate these three** — it only walks
+`media/menu-vlogs`, and the sources were never copied there. The exact settings are
+in the README table if they ever need redoing.
+
+### The preview-cache trap (cost real time — read this)
+
+The Browser pane served a **months-old cached `script.js`** on port 8123 while
+`index.html` was fresh, so the page ran phase-1 code (`item 1 … item 7`) against
+new markup. `location.reload()` did not clear it, and the network log showed a
+misleading `200` for `script.js`. `fetch('script.js?bust=…')` returned the correct
+file, which is how the cache was identified rather than a code bug.
+
+**Fix: serve on a new port.** A new origin is a new cache key. `launch.json` now has
+`birthday-site-phase3` on **8125** (8123/8124 are burned). If the page ever behaves
+like an older version, suspect this before debugging the code.
+
+### Verification actually performed
+
+Clicked through end-to-end on the **live URL** at 375px: yes → cake → reveal →
+menu → all 7 vlogs load and play (durations and dimensions checked) → no recipe
+markup anywhere → `om` note card → gallery (24 polaroids) → lightbox (wrap-around
+both ways, gallery clip plays) → hidden letter (280/280 chars, sign-off, closes and
+re-opens) → esc closes the top overlay. **No console output at all.** All 40 media
+URLs return 200/206 locally and live; the old `vid-20260722-wa0010.mp4` path 404s.
+
+**Screenshots were unavailable again** — `computer{action:"screenshot"}` still fails
+with "the Browser pane is not displayed". Everything above was verified through the
+DOM and the network log, *not by eye*. The one exception: the three new poster
+frames were opened directly from disk and confirmed upright.
+
+Because the pane never composites, `loading="lazy"` gallery images report
+`naturalWidth === 0` forever. That is the harness, not a broken gallery — the URLs
+were checked over the network instead. Don't chase it.
