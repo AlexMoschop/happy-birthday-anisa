@@ -6,73 +6,88 @@
 /* --- her name (used in the reveal + footer) --- */
 const FRIEND_NAME = "Anisa";
 
-/* --- menu: 7 food vlogs + recipes.
-       Replace name/emoji, paste the YouTube video id (the part
-       after "watch?v=") into videoId. While a videoId still
-       starts with "YOUTUBE_ID", a cute "coming soon" card shows
-       instead of a broken embed. --- */
+/* --- the menu: food vlogs, played from ./assets/menu/ ---
+       Rename `name` and `emoji` freely — they're just labels.
+       `video` / `poster` point at the compressed files on disk.
+
+       The LAST entry is special: type "note" shows a handwritten
+       message card instead of a video, and hides the recipe. --- */
 const MENU_ITEMS = [
   {
-    name: "item 1", emoji: "🍓", videoId: "YOUTUBE_ID_1",
-    recipe: {
-      ingredients: ["1 cup of something sweet", "a handful of fresh strawberries", "a pinch of love", "2 tbsp of giggles"],
-      steps: ["preheat your heart to 180°c", "mix everything gently — no rushing!!", "taste-test at least three times", "share with your favourite person (me)"],
-    },
-  },
-  {
-    name: "item 2", emoji: "🍰", videoId: "YOUTUBE_ID_2",
-    recipe: {
-      ingredients: ["2 cups fluffy flour", "1 cup softest sugar", "3 very polite eggs", "a splash of vanilla dreams"],
-      steps: ["whisk until it looks like a cloud", "fold, don't stir — be gentle", "bake until the kitchen smells like a hug", "decorate messily, it tastes better"],
-    },
-  },
-  {
-    name: "item 3", emoji: "🍜", videoId: "YOUTUBE_ID_3",
+    name: "jarred", emoji: "🍜",
+    video: "assets/menu/jarred.mp4", poster: "assets/menu/jarred.jpg",
     recipe: {
       ingredients: ["1 packet of the good noodles", "broth that took its time", "a soft-boiled egg with a jammy middle", "green onions, chopped tiny"],
       steps: ["boil water like you mean it", "let the broth simmer while you sing", "slurp loudly — it's the law", "no leftovers allowed"],
     },
   },
   {
-    name: "item 4", emoji: "🍪", videoId: "YOUTUBE_ID_4",
+    name: "nandini", emoji: "🍰",
+    video: "assets/menu/nandini.mp4", poster: "assets/menu/nandini.jpg",
+    recipe: {
+      ingredients: ["2 cups fluffy flour", "1 cup softest sugar", "3 very polite eggs", "a splash of vanilla dreams"],
+      steps: ["whisk until it looks like a cloud", "fold, don't stir — be gentle", "bake until the kitchen smells like a hug", "decorate messily, it tastes better"],
+    },
+  },
+  {
+    name: "prithvish", emoji: "🍪",
+    video: "assets/menu/prithvish.mp4", poster: "assets/menu/prithvish.jpg",
     recipe: {
       ingredients: ["1 stick of butter, room-temp & relaxed", "brown sugar (the cozy kind)", "chocolate chips — double the recipe says", "sea salt sprinkle"],
       steps: ["cream butter + sugar till fluffy", "add chips until it feels illegal", "chill the dough (hardest step)", "eat one raw, bake the rest"],
     },
   },
   {
-    name: "item 5", emoji: "🧋", videoId: "YOUTUBE_ID_5",
+    name: "the mystery vlog", emoji: "🍓",
+    video: "assets/menu/vid-20260722-wa0010.mp4", poster: "assets/menu/vid-20260722-wa0010.jpg",
     recipe: {
-      ingredients: ["strong tea, brewed with patience", "milk of your choosing", "brown-sugar pearls, bouncy", "lots of ice"],
-      steps: ["cook pearls till they're chewy-perfect", "swirl syrup around the glass — for the aesthetic", "pour milk slowly and watch the clouds", "big straw. mandatory."],
+      ingredients: ["1 cup of something sweet", "a handful of fresh strawberries", "a pinch of love", "2 tbsp of giggles"],
+      steps: ["preheat your heart to 180°c", "mix everything gently — no rushing!!", "taste-test at least three times", "share with your favourite person"],
     },
   },
   {
-    name: "item 6", emoji: "🥞", videoId: "YOUTUBE_ID_6",
-    recipe: {
-      ingredients: ["1 cup pancake mix (we don't judge)", "1 very round egg", "butter for the pan and for the soul", "maple syrup, a small lake of it"],
-      steps: ["flip only when the bubbles say so", "first pancake belongs to the chef", "stack tall like a tiny tower", "syrup until structurally unsound"],
-    },
-  },
-  {
-    name: "item 7", emoji: "🧁", videoId: "YOUTUBE_ID_7",
-    recipe: {
-      ingredients: ["12 paper cases, the cute ones", "batter made with one hand while dancing", "frosting in a pastel colour", "sprinkles — an irresponsible amount"],
-      steps: ["fill cases ⅔, not to the brim!!", "no peeking while they bake", "swirl frosting like a tiny cloud", "sprinkle like nobody's watching"],
-    },
+    type: "note",
+    name: "a little note", emoji: "✉️",
+    text: "Happy birthday Anisa! I hope you have a great birthday and enjoy your birthday weekend. Thank you for your contributions to the society as ambassador you've been a great help. Good luck with your next year at uni!",
   },
 ];
 
-/* --- freebie zone: 7 videos (purple section 💜) --- */
-const FREEBIE_VIDEOS = [
-  { title: "freebie 1", videoId: "YOUTUBE_ID_F1" },
-  { title: "freebie 2", videoId: "YOUTUBE_ID_F2" },
-  { title: "freebie 3", videoId: "YOUTUBE_ID_F3" },
-  { title: "freebie 4", videoId: "YOUTUBE_ID_F4" },
-  { title: "freebie 5", videoId: "YOUTUBE_ID_F5" },
-  { title: "freebie 6", videoId: "YOUTUBE_ID_F6" },
-  { title: "freebie 7", videoId: "YOUTUBE_ID_F7" },
+/* --- freebie gallery: everything in ./assets/freebie/ ---
+       kind "photo" or "video"; videos also need a poster. --- */
+const GALLERY = [
+  { kind: "photo", src: "assets/freebie/img-20260724-wa0002.jpg" },
+  { kind: "photo", src: "assets/freebie/img-20260724-wa0003.jpg" },
+  { kind: "photo", src: "assets/freebie/img-20260724-wa0004.jpg" },
+  { kind: "photo", src: "assets/freebie/img-20260724-wa0005.jpg" },
+  { kind: "photo", src: "assets/freebie/img-20260724-wa0006.jpg" },
+  { kind: "photo", src: "assets/freebie/img-20260724-wa0007.jpg" },
+  { kind: "photo", src: "assets/freebie/img-20260724-wa0008.jpg" },
+  { kind: "photo", src: "assets/freebie/img-20260724-wa0009.jpg" },
+  { kind: "video", src: "assets/freebie/vid-20260724-wa0024.mp4", poster: "assets/freebie/vid-20260724-wa0024.jpg" },
+  { kind: "photo", src: "assets/freebie/img-20260724-wa0010.jpg" },
+  { kind: "photo", src: "assets/freebie/img-20260724-wa0011.jpg" },
+  { kind: "photo", src: "assets/freebie/img-20260724-wa0012.jpg" },
+  { kind: "photo", src: "assets/freebie/img-20260724-wa0013.jpg" },
+  { kind: "photo", src: "assets/freebie/img-20260724-wa0014.jpg" },
+  { kind: "photo", src: "assets/freebie/img-20260724-wa0015.jpg" },
+  { kind: "photo", src: "assets/freebie/img-20260724-wa0016.jpg" },
+  { kind: "video", src: "assets/freebie/vid-20260724-wa0025.mp4", poster: "assets/freebie/vid-20260724-wa0025.jpg" },
+  { kind: "photo", src: "assets/freebie/img-20260724-wa0017.jpg" },
+  { kind: "photo", src: "assets/freebie/img-20260724-wa0018.jpg" },
+  { kind: "photo", src: "assets/freebie/img-20260724-wa0019.jpg" },
+  { kind: "photo", src: "assets/freebie/img-20260724-wa0020.jpg" },
+  { kind: "photo", src: "assets/freebie/img-20260724-wa0021.jpg" },
+  { kind: "photo", src: "assets/freebie/img-20260724-wa0022.jpg" },
+  { kind: "photo", src: "assets/freebie/img-20260724-wa0023.jpg" },
 ];
+
+/* --- the sticky note pinned at the end of the gallery --- */
+const GALLERY_NOTE = "*expert opinion: we REALLY need to do more stuff together and get more pictures!!";
+
+/* --- the hidden letter (freebie-inside-the-freebie) --- */
+const LETTER_BUTTON = "wait… another freebie?? 💜";
+const LETTER_TEXT = "Hi anisa! This is alex, just want to say happy birthday and i hope you enjoy my site! Even though I don't know you all that well, you always bring the best vibe and even better cakes. Continue doing what you're doing; and if you ever need any help don't hesitate to ask. Bye byeee";
+const LETTER_SIGNOFF = "— alex";
 
 /* ============================================================
    🛠  engine — no edits needed below this line
@@ -80,7 +95,8 @@ const FREEBIE_VIDEOS = [
 
 const $ = (s) => document.querySelector(s);
 
-const isPlaceholder = (id) => !id || id.startsWith("YOUTUBE_ID");
+/* a video slot that was too big to ship keeps this marker (see README) */
+const isMissingVideo = (src) => !src || src.startsWith("TOO_LARGE");
 
 /* escape config text before it goes through innerHTML — a stray quote in a
    recipe line must not corrupt the markup */
@@ -88,6 +104,9 @@ const esc = (s) => String(s).replace(/[&<>"']/g, (c) =>
   ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
 const REDUCED_MOTION = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* small random tilt, stable once assigned */
+const tilt = (deg) => ((Math.random() * 2 - 1) * deg).toFixed(2);
 
 /* ---------- fill in the name ---------- */
 $("#hbdText").textContent = `happy birthday ${FRIEND_NAME}!! 🎂`;
@@ -227,6 +246,14 @@ function spawnDrifter() {
 const CONFETTI_DRIFT_MS = 45000;   // stop feeding new drifters after 45s
 let confettiStartedAt = 0;
 
+/* rounded confetto — roundRect is missing on Safari < 16.4 */
+function confettoPath(c, p) {
+  c.beginPath();
+  if (c.roundRect) c.roundRect(-p.w / 2, -p.h / 2, p.w, p.h, 2);
+  else c.rect(-p.w / 2, -p.h / 2, p.w, p.h);
+  c.fill();
+}
+
 function tickConfetti() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   particles = particles.filter((p) => p.life > 0 && p.y < canvas.height + 20);
@@ -236,18 +263,14 @@ function tickConfetti() {
     p.x += p.vx;
     p.y += p.vy;
     p.rot += p.vr;
-    p.life -= 0.002;
     ctx.save();
     ctx.translate(p.x, p.y);
     ctx.rotate(p.rot);
     ctx.globalAlpha = Math.max(p.life, 0);
     ctx.fillStyle = p.color;
-    ctx.beginPath();
-    // rounded confetto (roundRect is missing on Safari < 16.4)
-    if (ctx.roundRect) ctx.roundRect(-p.w / 2, -p.h / 2, p.w, p.h, 2);
-    else ctx.rect(-p.w / 2, -p.h / 2, p.w, p.h);
-    ctx.fill();
+    confettoPath(ctx, p);
     ctx.restore();
+    p.life -= 0.002;
   }
   const drifting = Date.now() - confettiStartedAt < CONFETTI_DRIFT_MS;
   if (drifting && Math.random() < 0.06) spawnDrifter();
@@ -273,6 +296,47 @@ document.addEventListener("visibilitychange", () => {
     requestAnimationFrame(tickConfetti);
   }
 });
+
+/* a short one-shot pop on its own canvas — used by the letter, which sits
+   above the scene confetti and needs its own layer */
+function popConfettiOn(cv) {
+  if (REDUCED_MOTION || !cv) return;
+  const c = cv.getContext("2d");
+  cv.width = cv.clientWidth;
+  cv.height = cv.clientHeight;
+  let bits = [];
+  for (let i = 0; i < 70; i++) {
+    bits.push({
+      x: cv.width / 2 + (Math.random() - 0.5) * 80,
+      y: cv.height * 0.55,
+      vx: (Math.random() - 0.5) * 8,
+      vy: -Math.random() * 8 - 2,
+      w: 5 + Math.random() * 5,
+      h: 7 + Math.random() * 5,
+      rot: Math.random() * Math.PI,
+      vr: (Math.random() - 0.5) * 0.25,
+      color: PASTELS[(Math.random() * PASTELS.length) | 0],
+      life: 1,
+    });
+  }
+  (function tick() {
+    c.clearRect(0, 0, cv.width, cv.height);
+    bits = bits.filter((p) => p.life > 0 && p.y < cv.height + 20);
+    for (const p of bits) {
+      p.vy += 0.14; p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+      c.save();
+      c.translate(p.x, p.y);
+      c.rotate(p.rot);
+      c.globalAlpha = Math.max(p.life, 0);
+      c.fillStyle = p.color;
+      confettoPath(c, p);
+      c.restore();
+      p.life -= 0.006;
+    }
+    if (bits.length) requestAnimationFrame(tick);
+    else c.clearRect(0, 0, cv.width, cv.height);
+  })();
+}
 
 /* ---------- chime (WebAudio, no files needed) ---------- */
 let audioCtx = null;
@@ -321,21 +385,33 @@ const FOOD_ICON = (i) => {
   </svg>`;
 };
 
+/* envelope icon for the note slot in the sidebar */
+const NOTE_ICON = `
+  <svg class="ico" viewBox="0 0 30 30" aria-hidden="true">
+    <rect x="3" y="7" width="24" height="17" rx="3" fill="var(--soft-pink)"
+          stroke="var(--ink)" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M3.5 8.5 15 17l11.5-8.5" fill="none"
+          stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`;
+
 const HEART_CHECK = `
 <svg class="heart-box" viewBox="0 0 24 24" aria-hidden="true">
   <path d="M12 21 C4 15.5 2 11.6 2 8.4 A5.4 5.4 0 0 1 12 5.6 A5.4 5.4 0 0 1 22 8.4 C22 11.6 20 15.5 12 21 Z"/>
 </svg>`;
 
-function videoBlock(videoId, title) {
-  if (isPlaceholder(videoId)) {
-    return `<div class="video-wrap"><div class="coming-soon">
+const TAPE = (cls) => `<svg class="tape ${cls}" viewBox="0 0 42 20" aria-hidden="true"><use href="#d-tape"/></svg>`;
+
+/* local video player — preload="none" + poster keeps the page light */
+function videoBlock(src, poster, title) {
+  if (isMissingVideo(src)) {
+    return `<div class="video-wrap video-wrap--empty"><div class="coming-soon">
       ${CAMERA_SVG}<span>vlog coming soon!! 🎬</span>
     </div></div>`;
   }
+  const posterAttr = poster ? ` poster="${esc(poster)}"` : "";
   return `<div class="video-wrap">
-    <iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}"
-      title="${esc(title)}" loading="lazy" allowfullscreen
-      allow="encrypted-media; picture-in-picture"></iframe>
+    <video controls preload="none"${posterAttr} playsinline
+           title="${esc(title)}" src="${esc(src)}"></video>
   </div>`;
 }
 
@@ -348,8 +424,8 @@ const menuList = $("#menuList");
 MENU_ITEMS.forEach((item, i) => {
   const li = document.createElement("li");
   const btn = document.createElement("button");
-  btn.className = "menu-item";
-  btn.innerHTML = `${FOOD_ICON(i)}<span>${esc(item.name)} ${esc(item.emoji)}</span>`;
+  btn.className = "menu-item" + (item.type === "note" ? " menu-item--note" : "");
+  btn.innerHTML = `${item.type === "note" ? NOTE_ICON : FOOD_ICON(i)}<span>${esc(item.name)} ${esc(item.emoji)}</span>`;
   btn.addEventListener("click", () => openDetail(i));
   li.appendChild(btn);
   menuList.appendChild(li);
@@ -371,62 +447,104 @@ $("#menuBtn").addEventListener("click", openSidebar);
 $("#menuClose").addEventListener("click", closeSidebar);
 scrim.addEventListener("click", closeSidebar);
 
+function closeDetail() {
+  // stop playback so audio doesn't keep going behind the overlay
+  detail.querySelectorAll("video").forEach((v) => v.pause());
+  detail.classList.remove("is-open");
+  detail.setAttribute("aria-hidden", "true");
+}
+
 function openDetail(i) {
   const item = MENU_ITEMS[i];
-  const ing = item.recipe.ingredients.map((x, j) => `
-    <li><label>
-      <input type="checkbox" id="ing-${i}-${j}" data-key="ing-${i}-${j}"
-             ${localStorage.getItem("bday-ing-" + i + "-" + j) ? "checked" : ""}>
-      ${HEART_CHECK}
-      <span class="txt">${esc(x)}</span>
-    </label></li>`).join("");
-  const steps = item.recipe.steps.map((x) => `<li>${esc(x)}</li>`).join("");
 
-  $("#detailBody").innerHTML = `
-    <button class="pill detail-back" id="detailBack">← back to menu</button>
-    <h3 class="recipe-title">${esc(item.name)} ${esc(item.emoji)}</h3>
-    ${videoBlock(item.videoId, item.name)}
-    <div class="card recipe-card">
-      <h4>ingredients</h4>
-      <ul class="check-list">${ing}</ul>
-      <h4>steps</h4>
-      <ol class="step-list">${steps}</ol>
-    </div>`;
-  // remember ticked ingredients across visits (cook-along survives navigation)
-  $("#detailBody").querySelectorAll(".check-list input").forEach((box) => {
-    box.addEventListener("change", () => {
-      const key = "bday-" + box.dataset.key;
-      try {
-        box.checked ? localStorage.setItem(key, "1") : localStorage.removeItem(key);
-      } catch (_) { /* private mode — no persistence, no crash */ }
+  if (item.type === "note") {
+    $("#detailBody").innerHTML = `
+      <button class="pill detail-back" id="detailBack">← back to menu</button>
+      <div class="note-card">
+        ${TAPE("tape--tl")}${TAPE("tape--tr")}
+        <p class="note-card__text">${esc(item.text)}</p>
+        <svg class="note-card__cake" viewBox="0 0 40 40" aria-hidden="true"><use href="#d-cake-sm"/></svg>
+      </div>`;
+  } else {
+    const ing = item.recipe.ingredients.map((x, j) => `
+      <li><label>
+        <input type="checkbox" id="ing-${i}-${j}" data-key="ing-${i}-${j}"
+               ${localStorage.getItem("bday-ing-" + i + "-" + j) ? "checked" : ""}>
+        ${HEART_CHECK}
+        <span class="txt">${esc(x)}</span>
+      </label></li>`).join("");
+    const steps = item.recipe.steps.map((x) => `<li>${esc(x)}</li>`).join("");
+
+    $("#detailBody").innerHTML = `
+      <button class="pill detail-back" id="detailBack">← back to menu</button>
+      <h3 class="recipe-title">${esc(item.name)} ${esc(item.emoji)}</h3>
+      ${videoBlock(item.video, item.poster, item.name)}
+      <div class="card recipe-card">
+        <h4>ingredients</h4>
+        <ul class="check-list">${ing}</ul>
+        <h4>steps</h4>
+        <ol class="step-list">${steps}</ol>
+      </div>`;
+
+    // remember ticked ingredients across visits (cook-along survives navigation)
+    $("#detailBody").querySelectorAll(".check-list input").forEach((box) => {
+      box.addEventListener("change", () => {
+        const key = "bday-" + box.dataset.key;
+        try {
+          box.checked ? localStorage.setItem(key, "1") : localStorage.removeItem(key);
+        } catch (_) { /* private mode — no persistence, no crash */ }
+      });
     });
-  });
-  $("#detailBack").addEventListener("click", () => {
-    detail.classList.remove("is-open");
-    detail.setAttribute("aria-hidden", "true");
-  });
+  }
+
+  $("#detailBack").addEventListener("click", closeDetail);
   detail.classList.add("is-open");
   detail.setAttribute("aria-hidden", "false");
   detail.querySelector(".overlay__scroll").scrollTop = 0;
   closeSidebar();
 }
 
-/* ---------- freebie zone ---------- */
+/* ---------- freebie zone: the polaroid gallery ---------- */
 const freebie = $("#freebie");
 const grid = $("#freebieGrid");
 let freebieBuilt = false;
 
-/* built on first open, not at page load — 7 YouTube players in a hidden
-   overlay would otherwise download on page load once real IDs are set */
+/* built on first open, not at page load */
 function buildFreebieGrid() {
   if (freebieBuilt) return;
   freebieBuilt = true;
-  FREEBIE_VIDEOS.forEach((v) => {
-    const card = document.createElement("div");
-    card.className = "f-card";
-    card.innerHTML = `${videoBlock(v.videoId, v.title)}<div class="f-card__title">${esc(v.title)} 💜</div>`;
+
+  GALLERY.forEach((it, i) => {
+    const card = document.createElement("button");
+    card.className = "polaroid";
+    card.style.setProperty("--tilt", tilt(3) + "deg");
+    card.setAttribute("aria-label",
+      it.kind === "video" ? "play video" : "open photo");
+    card.addEventListener("click", () => openLightbox(i));
+
+    const media = it.kind === "video"
+      ? `<img src="${esc(it.poster)}" alt="" loading="lazy" decoding="async">
+         <svg class="polaroid__play" viewBox="0 0 48 48" aria-hidden="true"><use href="#d-play"/></svg>`
+      : `<img src="${esc(it.src)}" alt="" loading="lazy" decoding="async">`;
+
+    // a heart or star taped to a corner, alternating sides
+    const doodle = i % 2 === 0 ? "d-heart" : "d-star";
+    const color = i % 2 === 0 ? "#9B7FD4" : "#F0C48A";
+
+    card.innerHTML = `
+      <span class="polaroid__frame">${media}</span>
+      ${TAPE(i % 2 === 0 ? "tape--tl" : "tape--tr")}
+      <svg class="polaroid__doodle" viewBox="0 0 24 24" aria-hidden="true"
+           style="fill:${color}"><use href="#${doodle}"/></svg>`;
     grid.appendChild(card);
   });
+
+  // the sticky note pinned at the end of the grid
+  const note = document.createElement("div");
+  note.className = "sticky-note";
+  note.style.setProperty("--tilt", tilt(4) + "deg");
+  note.innerHTML = `<p>${esc(GALLERY_NOTE)}</p>`;
+  grid.appendChild(note);
 }
 
 $("#freebieBtn").addEventListener("click", () => {
@@ -434,17 +552,128 @@ $("#freebieBtn").addEventListener("click", () => {
   freebie.classList.add("is-open");
   freebie.setAttribute("aria-hidden", "false");
 });
-$("#freebieClose").addEventListener("click", () => {
+$("#freebieClose").addEventListener("click", closeFreebie);
+
+function closeFreebie() {
   freebie.classList.remove("is-open");
   freebie.setAttribute("aria-hidden", "true");
+}
+
+/* ---------- lightbox ---------- */
+const lightbox = $("#lightbox");
+const lightboxStage = $("#lightboxStage");
+let lightboxIndex = -1;
+
+function renderLightbox() {
+  const it = GALLERY[lightboxIndex];
+  if (!it) return;
+  lightboxStage.innerHTML = it.kind === "video"
+    ? `<video class="lb-media" controls autoplay playsinline
+              poster="${esc(it.poster)}" src="${esc(it.src)}"></video>`
+    : `<img class="lb-media" src="${esc(it.src)}" alt="">`;
+  $("#lightboxCount").textContent = `${lightboxIndex + 1} / ${GALLERY.length}`;
+}
+
+function openLightbox(i) {
+  lightboxIndex = i;
+  renderLightbox();
+  lightbox.classList.add("is-open");
+  lightbox.setAttribute("aria-hidden", "false");
+}
+function closeLightbox() {
+  lightboxStage.querySelectorAll("video").forEach((v) => v.pause());
+  lightbox.classList.remove("is-open");
+  lightbox.setAttribute("aria-hidden", "true");
+  lightboxStage.innerHTML = "";
+  lightboxIndex = -1;
+}
+function stepLightbox(dir) {
+  if (lightboxIndex < 0) return;
+  lightboxStage.querySelectorAll("video").forEach((v) => v.pause());
+  lightboxIndex = (lightboxIndex + dir + GALLERY.length) % GALLERY.length;
+  renderLightbox();
+}
+
+$("#lightboxClose").addEventListener("click", closeLightbox);
+$("#lightboxPrev").addEventListener("click", () => stepLightbox(-1));
+$("#lightboxNext").addEventListener("click", () => stepLightbox(1));
+// tapping the backdrop closes, but not taps on the media itself
+lightbox.addEventListener("click", (e) => {
+  if (e.target === lightbox || e.target === lightboxStage) closeLightbox();
 });
 
-/* ---------- esc closes everything ---------- */
+/* touch swipe — horizontal only, so vertical scroll/pinch still works */
+let touchX = 0, touchY = 0;
+lightboxStage.addEventListener("touchstart", (e) => {
+  touchX = e.changedTouches[0].clientX;
+  touchY = e.changedTouches[0].clientY;
+}, { passive: true });
+lightboxStage.addEventListener("touchend", (e) => {
+  const dx = e.changedTouches[0].clientX - touchX;
+  const dy = e.changedTouches[0].clientY - touchY;
+  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) stepLightbox(dx < 0 ? 1 : -1);
+}, { passive: true });
+
+/* ---------- the hidden letter ---------- */
+const letter = $("#letter");
+const letterText = $("#letterText");
+let typingTimer = null;
+
+function openLetter() {
+  letter.classList.add("is-open");
+  letter.setAttribute("aria-hidden", "false");
+  // let the envelope flap open before the letter slides up
+  requestAnimationFrame(() => letter.classList.add("is-unsealed"));
+
+  clearTimeout(typingTimer);
+  letterText.textContent = "";
+  $("#letterSign").classList.remove("is-on");
+
+  const startDelay = REDUCED_MOTION ? 0 : 900;
+  if (REDUCED_MOTION) {
+    letterText.textContent = LETTER_TEXT;
+    finishLetter();
+    return;
+  }
+  typingTimer = setTimeout(() => typeOut(LETTER_TEXT, 0), startDelay);
+}
+
+function typeOut(str, i) {
+  letterText.textContent = str.slice(0, i);
+  if (i >= str.length) { finishLetter(); return; }
+  // slight pause after sentence endings reads more like handwriting
+  const ch = str[i];
+  const delay = ".!?".includes(ch) ? 160 : 18;
+  typingTimer = setTimeout(() => typeOut(str, i + 1), delay);
+}
+
+function finishLetter() {
+  $("#letterSign").classList.add("is-on");
+  popConfettiOn($("#letterConfetti"));
+}
+
+function closeLetter() {
+  clearTimeout(typingTimer);
+  letter.classList.remove("is-open", "is-unsealed");
+  letter.setAttribute("aria-hidden", "true");
+}
+
+$("#letterBtn").addEventListener("click", openLetter);
+$("#letterClose").addEventListener("click", closeLetter);
+
+/* fill in the editable letter chrome */
+$("#letterBtn").textContent = LETTER_BUTTON;
+$("#letterSign").textContent = LETTER_SIGNOFF;
+
+/* ---------- esc closes the topmost thing ---------- */
 addEventListener("keydown", (e) => {
+  if (e.key === "ArrowLeft" && lightboxIndex >= 0) { stepLightbox(-1); return; }
+  if (e.key === "ArrowRight" && lightboxIndex >= 0) { stepLightbox(1); return; }
   if (e.key !== "Escape") return;
+
+  if (lightboxIndex >= 0) { closeLightbox(); return; }
+  if (letter.classList.contains("is-open")) { closeLetter(); return; }
   closeSidebar();
-  detail.classList.remove("is-open");
-  detail.setAttribute("aria-hidden", "true");
-  freebie.classList.remove("is-open");
-  freebie.setAttribute("aria-hidden", "true");
+  closeDetail();
+  closeFreebie();
 });

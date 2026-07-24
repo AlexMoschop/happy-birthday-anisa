@@ -321,17 +321,27 @@ body{
 
 /* detail view content */
 .detail-back{margin-bottom:1rem;}
+/* the vlogs are portrait phone videos — let the clip set its own shape
+   rather than pillarboxing it into a 16:9 letterbox */
 .video-wrap{
   position:relative;
-  aspect-ratio:16/9;
   width:100%;
   border:2px solid var(--ink);
   border-radius:var(--radius);
   overflow:hidden;
-  background:var(--card-white);
+  background:var(--ink);
   box-shadow:var(--shadow);
+  display:flex;
+  justify-content:center;
 }
-.video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+.video-wrap video{
+  width:auto;max-width:100%;
+  height:auto;max-height:min(68vh,620px);
+  border:0;display:block;
+}
+/* the "coming soon" fallback has no intrinsic size, so it keeps a 16:9 box */
+.video-wrap--empty{aspect-ratio:16/9;background:var(--card-white);}
+.video-wrap--empty .coming-soon{position:absolute;inset:0;}
 .coming-soon{
   width:100%;height:100%;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -361,27 +371,242 @@ body{
 .step-list{margin:0;padding-left:1.3rem;display:grid;gap:.55rem;}
 .step-list li{font-size:1.05rem;line-height:1.5;padding-left:.2rem;}
 
-/* freebie grid */
+/* ============================================================
+   the handwritten note card (last menu slot)
+   ============================================================ */
+.note-card{
+  position:relative;
+  background:var(--card-white);
+  border:2px solid var(--ink);
+  border-radius:6px;
+  box-shadow:var(--shadow);
+  padding:2.6rem 1.8rem 1.4rem;
+  margin:1.6rem auto 0;
+  max-width:460px;
+  transform:rotate(-1.6deg);
+}
+.note-card__text{
+  font-family:var(--hand2);
+  font-size:1.35rem;
+  line-height:1.75;
+  margin:0;
+  /* faint ruled lines, like a letter pad */
+  background-image:repeating-linear-gradient(
+    to bottom, transparent 0 calc(1.75em - 1px),
+    rgba(169,203,232,.45) calc(1.75em - 1px) 1.75em);
+}
+.note-card__cake{width:44px;height:44px;display:block;margin:1.2rem auto 0;}
+
+/* tape strips — reused by the note card and the polaroids */
+.tape{
+  position:absolute;width:52px;height:24px;
+  fill:var(--soft-yellow);stroke:var(--ink);stroke-width:1.5;
+  opacity:.9;pointer-events:none;
+}
+.tape--tl{top:-11px;left:14px;transform:rotate(-8deg);}
+.tape--tr{top:-11px;right:14px;transform:rotate(7deg);}
+
+/* ============================================================
+   freebie gallery — polaroid masonry
+   ============================================================ */
 .freebie__title{margin-top:.4rem;}
 .freebie__sub{font-family:var(--hand2);opacity:.75;margin:-.6rem 0 1.4rem;}
 .freebie__close{position:fixed;top:16px;right:16px;z-index:80;}
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
-  gap:16px;
+
+/* CSS columns give real masonry without any layout JS */
+.polaroid-grid{
+  column-count:3;
+  column-gap:18px;
+  padding-bottom:70px;   /* room for the floating letter button */
 }
-.f-card{
+.polaroid,.sticky-note{
+  break-inside:avoid;
+  margin:0 0 22px;
+  width:100%;
+}
+.polaroid{
+  position:relative;
+  display:block;
   background:var(--card-white);
   border:2px solid var(--ink);
-  border-radius:var(--radius);
+  border-radius:4px;
   box-shadow:var(--shadow);
-  overflow:hidden;
-  display:flex;flex-direction:column;
+  padding:10px 10px 30px;      /* the fat polaroid chin */
+  cursor:pointer;
+  transform:rotate(var(--tilt,0deg));
+  transition:transform .2s ease, box-shadow .2s ease;
 }
-.f-card__title{
-  font-family:var(--hand2);font-size:1.15rem;
-  padding:.7rem 1rem;border-top:2px solid var(--ink);
+.polaroid:hover,.polaroid:focus-visible{
+  transform:rotate(0deg) scale(1.03);
+  box-shadow:0 12px 28px rgba(61,56,51,.22);
+  z-index:2;
 }
+.polaroid__frame{position:relative;display:block;line-height:0;}
+.polaroid img{
+  width:100%;height:auto;display:block;
+  border-radius:2px;background:var(--gingham-blue);
+}
+.polaroid__play{
+  position:absolute;top:50%;left:50%;
+  width:52px;height:52px;
+  transform:translate(-50%,-50%);
+  filter:drop-shadow(0 2px 6px rgba(61,56,51,.35));
+  pointer-events:none;
+}
+.polaroid__doodle{
+  position:absolute;bottom:4px;right:10px;
+  width:22px;height:22px;
+}
+
+/* the tilted sticky note pinned at the end of the grid */
+.sticky-note{
+  display:block;
+  background:var(--soft-yellow);
+  border:2px solid var(--ink);
+  border-radius:4px;
+  box-shadow:var(--shadow);
+  padding:1.4rem 1.2rem;
+  transform:rotate(var(--tilt,0deg));
+}
+.sticky-note p{
+  margin:0;
+  font-family:var(--hand2);
+  font-size:1.2rem;
+  line-height:1.5;
+}
+
+/* the freebie-inside-the-freebie button */
+.letter-btn{
+  position:fixed;
+  bottom:20px;right:20px;z-index:78;
+  background:var(--soft-purple);
+  font-size:1.1rem;
+  max-width:calc(100vw - 40px);
+}
+
+/* ============================================================
+   lightbox
+   ============================================================ */
+.lightbox{
+  position:fixed;inset:0;z-index:90;
+  display:flex;align-items:center;justify-content:center;
+  padding:70px 16px;
+  opacity:0;visibility:hidden;
+  transition:opacity .25s ease, visibility .25s;
+  /* purple gingham backdrop */
+  background-color:rgba(61,56,51,.72);
+  background-image:
+    repeating-linear-gradient(90deg, transparent 0 11px, rgba(201,184,232,.22) 11px 22px),
+    repeating-linear-gradient(0deg, transparent 0 11px, rgba(201,184,232,.22) 11px 22px);
+}
+.lightbox.is-open{opacity:1;visibility:visible;}
+.lightbox__stage{
+  max-width:min(900px,100%);max-height:100%;
+  display:flex;align-items:center;justify-content:center;
+}
+.lb-media{
+  max-width:100%;max-height:calc(100vh - 140px);
+  width:auto;height:auto;display:block;
+  background:var(--card-white);
+  border:3px solid var(--card-white);
+  border-radius:8px;
+  box-shadow:0 14px 40px rgba(0,0,0,.4);
+}
+.lightbox__close{position:fixed;top:16px;right:16px;z-index:92;}
+.lightbox__count{
+  position:fixed;top:24px;left:50%;transform:translateX(-50%);
+  font-family:var(--hand2);font-size:1.05rem;
+  color:var(--card-white);
+  text-shadow:0 1px 4px rgba(0,0,0,.5);
+  z-index:92;pointer-events:none;
+}
+.lightbox__nav{
+  position:fixed;top:50%;transform:translateY(-50%);
+  z-index:92;
+  width:46px;height:46px;padding:0;
+  font-size:1.8rem;line-height:1;
+  display:grid;place-items:center;
+}
+.lightbox__nav--prev{left:12px;}
+.lightbox__nav--next{right:12px;}
+.lightbox__nav:hover{transform:translateY(-50%) scale(1.08);}
+
+/* ============================================================
+   the hidden letter
+   ============================================================ */
+.letter{
+  position:fixed;inset:0;z-index:95;
+  display:flex;align-items:center;justify-content:center;
+  padding:24px 16px;
+  opacity:0;visibility:hidden;
+  transition:opacity .3s ease, visibility .3s;
+  background-color:rgba(61,56,51,.75);
+  background-image:
+    repeating-linear-gradient(90deg, transparent 0 11px, rgba(201,184,232,.22) 11px 22px),
+    repeating-linear-gradient(0deg, transparent 0 11px, rgba(201,184,232,.22) 11px 22px);
+}
+.letter.is-open{opacity:1;visibility:visible;}
+.letter__close{position:fixed;top:16px;right:16px;z-index:98;}
+
+.letter__envelope{
+  position:relative;
+  width:min(460px,100%);
+  max-height:100%;
+}
+/* flap hinges open from the top */
+.letter__flap{
+  position:absolute;top:0;left:0;right:0;
+  width:100%;height:auto;z-index:3;
+  transform-origin:top center;
+  transform:rotateX(0deg);
+  transition:transform .55s cubic-bezier(.4,0,.2,1);
+}
+.letter.is-unsealed .letter__flap{transform:rotateX(-180deg);}
+
+/* the pocket front sits above the paper so it slides out from inside */
+.letter__pocket{
+  position:absolute;bottom:0;left:0;right:0;
+  width:100%;height:auto;z-index:4;
+  pointer-events:none;
+}
+
+.letter__paper{
+  position:relative;z-index:2;
+  background:var(--card-white);
+  border:2px solid var(--ink);
+  border-radius:8px;
+  box-shadow:var(--shadow);
+  padding:1.8rem 1.5rem 1.4rem;
+  margin:34px 12px 46px;
+  opacity:0;
+  transform:translateY(40px);
+  transition:transform .6s cubic-bezier(.3,.9,.3,1) .35s, opacity .4s ease .35s;
+  max-height:70vh;overflow-y:auto;
+}
+.letter.is-unsealed .letter__paper{opacity:1;transform:translateY(-18px);}
+
+.letter__confetti{
+  position:absolute;inset:0;width:100%;height:100%;
+  pointer-events:none;z-index:2;
+}
+.letter__text{
+  position:relative;z-index:1;
+  font-family:var(--hand2);
+  font-size:1.2rem;line-height:1.65;
+  margin:0;
+  min-height:11.5em;      /* reserve height so typing doesn't reflow the card */
+  white-space:pre-wrap;
+}
+.letter__sign{
+  position:relative;z-index:1;
+  font-family:var(--hand);
+  font-size:1.3rem;
+  text-align:right;
+  margin:.8rem 0 0;
+  opacity:0;
+  transition:opacity .5s ease;
+}
+.letter__sign.is-on{opacity:1;}
 
 /* ============================================================
    footer
@@ -396,10 +621,25 @@ body{
 /* ============================================================
    responsive
    ============================================================ */
+@media (max-width:900px){
+  .polaroid-grid{column-count:2;}
+}
 @media (max-width:600px){
   .sidebar{width:100vw;border-right:none;}
-  .grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));}
   .chrome--freebie{bottom:16px;}
+  .polaroid-grid{column-gap:14px;}
+  .polaroid{padding:8px 8px 24px;}
+  .note-card{padding:2.2rem 1.2rem 1.2rem;}
+  .note-card__text{font-size:1.2rem;}
+  /* arrows would cover the photo on a narrow screen — swipe instead */
+  .lightbox__nav{display:none;}
+  .lightbox{padding:64px 10px;}
+  .letter__text{font-size:1.1rem;}
+}
+/* only go single-column on genuinely tiny screens — 2 up reads better
+   than a 24-item single-file scroll on a normal phone */
+@media (max-width:330px){
+  .polaroid-grid{column-count:1;}
 }
 
 @media (prefers-reduced-motion:reduce){
@@ -407,4 +647,7 @@ body{
   .scene{opacity:1;visibility:visible;transform:none;}
   .scene:not(.is-active){display:none;}
   .fade-up,.bounce-in{opacity:1 !important;transform:none !important;}
+  /* these fade in via transition; without it they'd stay invisible */
+  .letter.is-open .letter__paper{opacity:1 !important;transform:none !important;}
+  .letter.is-open .letter__flap{transform:rotateX(-180deg) !important;}
 }

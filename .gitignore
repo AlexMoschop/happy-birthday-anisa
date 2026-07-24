@@ -1,0 +1,10 @@
+# Original, uncompressed media pulled from Google Drive.
+# These are the SOURCES (~1.3 GB). Only the compressed files in ./assets/
+# are committed and served. Never commit this folder — GitHub rejects
+# files over 100 MB and the repo should stay small.
+media/
+
+# OS / editor noise
+Thumbs.db
+desktop.ini
+.DS_Store
