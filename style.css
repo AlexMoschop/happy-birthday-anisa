@@ -350,26 +350,8 @@ body{
 }
 .coming-soon svg{width:70px;height:70px;}
 
+/* the vlog's name, sat above its player */
 .recipe-title{font-family:var(--hand);font-size:1.9rem;margin:1.4rem 0 .3rem;}
-.recipe-card{margin-top:1rem;}
-.recipe-card h4{
-  font-family:var(--hand);font-size:1.5rem;margin:0 0 .6rem;font-weight:400;
-}
-.check-list{list-style:none;margin:0 0 1rem;padding:0;display:grid;gap:.5rem;}
-.check-list li{display:flex;align-items:center;gap:.6rem;font-size:1.05rem;}
-.check-list input{position:absolute;opacity:0;width:0;height:0;}
-.heart-box{
-  width:26px;height:26px;flex:0 0 auto;cursor:pointer;
-  transition:transform .15s ease;
-}
-.heart-box:hover{transform:scale(1.15);}
-.heart-box path{fill:var(--card-white);stroke:var(--ink);stroke-width:2;}
-.check-list input:checked + .heart-box path{fill:var(--soft-pink);}
-.check-list label{cursor:pointer;display:flex;align-items:center;gap:.6rem;}
-.check-list input:checked ~ .txt{text-decoration:line-through;opacity:.55;}
-
-.step-list{margin:0;padding-left:1.3rem;display:grid;gap:.55rem;}
-.step-list li{font-size:1.05rem;line-height:1.5;padding-left:.2rem;}
 
 /* ============================================================
    the handwritten note card (last menu slot)

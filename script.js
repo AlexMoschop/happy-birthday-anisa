@@ -11,43 +11,18 @@ const FRIEND_NAME = "Anisa";
        `video` / `poster` point at the compressed files on disk.
 
        The LAST entry is special: type "note" shows a handwritten
-       message card instead of a video, and hides the recipe. --- */
+       message card instead of a video. --- */
 const MENU_ITEMS = [
-  {
-    name: "jarred", emoji: "🍜",
-    video: "assets/menu/jarred.mp4", poster: "assets/menu/jarred.jpg",
-    recipe: {
-      ingredients: ["1 packet of the good noodles", "broth that took its time", "a soft-boiled egg with a jammy middle", "green onions, chopped tiny"],
-      steps: ["boil water like you mean it", "let the broth simmer while you sing", "slurp loudly — it's the law", "no leftovers allowed"],
-    },
-  },
-  {
-    name: "nandini", emoji: "🍰",
-    video: "assets/menu/nandini.mp4", poster: "assets/menu/nandini.jpg",
-    recipe: {
-      ingredients: ["2 cups fluffy flour", "1 cup softest sugar", "3 very polite eggs", "a splash of vanilla dreams"],
-      steps: ["whisk until it looks like a cloud", "fold, don't stir — be gentle", "bake until the kitchen smells like a hug", "decorate messily, it tastes better"],
-    },
-  },
-  {
-    name: "prithvish", emoji: "🍪",
-    video: "assets/menu/prithvish.mp4", poster: "assets/menu/prithvish.jpg",
-    recipe: {
-      ingredients: ["1 stick of butter, room-temp & relaxed", "brown sugar (the cozy kind)", "chocolate chips — double the recipe says", "sea salt sprinkle"],
-      steps: ["cream butter + sugar till fluffy", "add chips until it feels illegal", "chill the dough (hardest step)", "eat one raw, bake the rest"],
-    },
-  },
-  {
-    name: "the mystery vlog", emoji: "🍓",
-    video: "assets/menu/vid-20260722-wa0010.mp4", poster: "assets/menu/vid-20260722-wa0010.jpg",
-    recipe: {
-      ingredients: ["1 cup of something sweet", "a handful of fresh strawberries", "a pinch of love", "2 tbsp of giggles"],
-      steps: ["preheat your heart to 180°c", "mix everything gently — no rushing!!", "taste-test at least three times", "share with your favourite person"],
-    },
-  },
+  { name: "jarred",    emoji: "🍜", video: "assets/menu/jarred.mp4",    poster: "assets/menu/jarred.jpg" },
+  { name: "nandini",   emoji: "🍰", video: "assets/menu/nandini.mp4",   poster: "assets/menu/nandini.jpg" },
+  { name: "prithvish", emoji: "🍪", video: "assets/menu/prithvish.mp4", poster: "assets/menu/prithvish.jpg" },
+  { name: "nosa",      emoji: "🍓", video: "assets/menu/nosa.mp4",      poster: "assets/menu/nosa.jpg" },
+  { name: "mirna",     emoji: "🍡", video: "assets/menu/mirna.mp4",     poster: "assets/menu/mirna.jpg" },
+  { name: "kevin",     emoji: "🍔", video: "assets/menu/kevin.mp4",     poster: "assets/menu/kevin.jpg" },
+  { name: "daniel",    emoji: "🧁", video: "assets/menu/daniel.mp4",    poster: "assets/menu/daniel.jpg" },
   {
     type: "note",
-    name: "a little note", emoji: "✉️",
+    name: "om", emoji: "✉️",
     text: "Happy birthday Anisa! I hope you have a great birthday and enjoy your birthday weekend. Thank you for your contributions to the society as ambassador you've been a great help. Good luck with your next year at uni!",
   },
 ];
@@ -394,11 +369,6 @@ const NOTE_ICON = `
           stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
   </svg>`;
 
-const HEART_CHECK = `
-<svg class="heart-box" viewBox="0 0 24 24" aria-hidden="true">
-  <path d="M12 21 C4 15.5 2 11.6 2 8.4 A5.4 5.4 0 0 1 12 5.6 A5.4 5.4 0 0 1 22 8.4 C22 11.6 20 15.5 12 21 Z"/>
-</svg>`;
-
 const TAPE = (cls) => `<svg class="tape ${cls}" viewBox="0 0 42 20" aria-hidden="true"><use href="#d-tape"/></svg>`;
 
 /* local video player — preload="none" + poster keeps the page light */
@@ -466,35 +436,10 @@ function openDetail(i) {
         <svg class="note-card__cake" viewBox="0 0 40 40" aria-hidden="true"><use href="#d-cake-sm"/></svg>
       </div>`;
   } else {
-    const ing = item.recipe.ingredients.map((x, j) => `
-      <li><label>
-        <input type="checkbox" id="ing-${i}-${j}" data-key="ing-${i}-${j}"
-               ${localStorage.getItem("bday-ing-" + i + "-" + j) ? "checked" : ""}>
-        ${HEART_CHECK}
-        <span class="txt">${esc(x)}</span>
-      </label></li>`).join("");
-    const steps = item.recipe.steps.map((x) => `<li>${esc(x)}</li>`).join("");
-
     $("#detailBody").innerHTML = `
       <button class="pill detail-back" id="detailBack">← back to menu</button>
       <h3 class="recipe-title">${esc(item.name)} ${esc(item.emoji)}</h3>
-      ${videoBlock(item.video, item.poster, item.name)}
-      <div class="card recipe-card">
-        <h4>ingredients</h4>
-        <ul class="check-list">${ing}</ul>
-        <h4>steps</h4>
-        <ol class="step-list">${steps}</ol>
-      </div>`;
-
-    // remember ticked ingredients across visits (cook-along survives navigation)
-    $("#detailBody").querySelectorAll(".check-list input").forEach((box) => {
-      box.addEventListener("change", () => {
-        const key = "bday-" + box.dataset.key;
-        try {
-          box.checked ? localStorage.setItem(key, "1") : localStorage.removeItem(key);
-        } catch (_) { /* private mode — no persistence, no crash */ }
-      });
-    });
+      ${videoBlock(item.video, item.poster, item.name)}`;
   }
 
   $("#detailBack").addEventListener("click", closeDetail);

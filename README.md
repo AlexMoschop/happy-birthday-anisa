@@ -18,7 +18,7 @@ Everything you'd want to change lives in the clearly-marked block at the **top o
 | Thing | Where |
 |---|---|
 | Her name | `FRIEND_NAME` |
-| Menu labels, vlogs, recipes | `MENU_ITEMS` |
+| Menu labels + vlogs | `MENU_ITEMS` |
 | The note card text | last entry of `MENU_ITEMS` (`type: "note"`) |
 | Gallery photos/videos | `GALLERY` |
 | The sticky-note line in the gallery | `GALLERY_NOTE` |
@@ -32,17 +32,12 @@ The birthday message on the reveal screen is in `index.html`, between the
 `MENU_ITEMS` maps 1:1 onto the sidebar. Each video entry looks like:
 
 ```js
-{
-  name: "jarred", emoji: "🍜",
-  video: "assets/menu/jarred.mp4",
-  poster: "assets/menu/jarred.jpg",
-  recipe: { ingredients: [...], steps: [...] },
-}
+{ name: "jarred", emoji: "🍜", video: "assets/menu/jarred.mp4", poster: "assets/menu/jarred.jpg" }
 ```
 
 `name` and `emoji` are just labels — rename them to whatever you like without
 touching `video`/`poster`. The **last** entry is the handwritten note card
-(`type: "note"`); it has no video and its recipe section is hidden by design.
+(`type: "note"`); it has no video, just the message.
 
 > ⚠️ **Content is code.** One missing comma in these arrays throws a `SyntaxError`
 > that kills the whole script — including the `yes!!` button, which leaves the
@@ -62,8 +57,11 @@ poster frame per video:
 |---|---|---|---|
 | `jarred.mp4` | 96 MB `.mov` | 4.1 MB | 720p, CRF 28 |
 | `prithvish.mp4` | 189 MB `.mov` | 6.6 MB | 720p, CRF 28 |
-| `vid-20260722-wa0010.mp4` | 97 MB `.mp4` | 16.9 MB | 720p, CRF 28 |
+| `nosa.mp4` | 97 MB `.mp4` | 16.9 MB | 720p, CRF 28 |
 | `nandini.mp4` | 953 MB `.MOV` | 37 MB | **480p, CRF 30** — it's 10½ minutes long, so 720p came out at 87 MB. Dropped to 480p to keep it a reasonable phone download. |
+| `kevin.mp4` | 270 MB `.mov` | 9.2 MB | 720p, CRF 28, capped at 30fps (source was 60) |
+| `daniel.mp4` | 377 MB `.MOV` | 11.2 MB | 720p, CRF 28 — 4K source, rotation metadata applied on encode |
+| `mirna.mp4` | 768 MB `.mp4` | 20.8 MB | 720p, **CRF 30**, 30fps — 6½ minutes long |
 | gallery (22 photos) | — | 5 MB | copied as-is; already small |
 | gallery (2 clips) | 11 MB | 7.4 MB | 720p, CRF 28 |
 
