@@ -7,12 +7,17 @@ Written for whoever (human or model) picks this up next.
 
 ## 1. Current state
 
-**Live:** https://alexmoschop.github.io/birthday-site/
-**Repo:** https://github.com/AlexMoschop/birthday-site (public, owner `AlexMoschop`)
+**Live:** https://alexmoschop.github.io/happy-birthday-anisa/
+**Repo:** https://github.com/AlexMoschop/happy-birthday-anisa (public, owner `AlexMoschop`)
 **Local:** `C:\Users\User1\Downloads\birthday-site`
-**Last commit:** `abb7dba` — "council fixes: Anisa, escaping, CSP, lazy embeds, confetti hardening"
+**Last commit:** `4100ed1` — "phase 2: real vlogs, photo gallery, note card and hidden letter"
 
-Status: fully built, deployed, verified live. **Content is still placeholder** — see §6.
+Status: **phase 2 complete.** Real media is in, deployed, verified live on a
+375px viewport. See §10 for what phase 2 changed.
+
+> The old `birthday-site` repo still exists on GitHub with the placeholder
+> version, and is still wired up as the git remote `old-birthday-site`.
+> Nothing points at it any more — safe to delete when you like.
 
 ### Files
 
@@ -141,20 +146,18 @@ Architect. Full output saved to:
 
 ## 6. Outstanding / next steps
 
-**Blocking before sending to Anisa:**
-1. `MENU_ITEMS` still has 7 placeholder items named `"item 1"…"item 7"` with joke
-   filler recipes.
-2. All 14 `videoId`s are `YOUTUBE_ID_*` placeholders → every video shows the
-   "vlog coming soon!! 🎬" fallback card. Grep for `YOUTUBE_ID` to confirm.
-3. The birthday message in `index.html` (between `<!-- BIRTHDAY_MESSAGE -->` and
-   `<!-- /BIRTHDAY_MESSAGE -->`) is **draft text written by Claude**, not the
-   user's own words. Should be replaced.
-4. **Open the live URL on a real phone** before sending — flagged by three of the
-   four council members. Not yet done.
-
-**Known caveat:** the "coming soon" fallback is cute enough that an unfinished
-site does not *look* broken. The failure mode is Anisa receiving a template with
-no error shown.
+1. **Menu labels are placeholders.** `MENU_ITEMS[].name` is currently the vlog
+   filename (`jarred`, `nandini`, `prithvish`, `the mystery vlog`) with an
+   arbitrary food emoji. Alex said he'd rename these himself.
+2. **The recipes are still Claude's joke filler.** They sit under each vlog and
+   read as generic. Either write real ones or delete the `recipe` key.
+3. The reveal message in `index.html` (between `<!-- BIRTHDAY_MESSAGE -->` and
+   `<!-- /BIRTHDAY_MESSAGE -->`) is **still draft text written by Claude**, not
+   Alex's own words. The note card and the letter *are* his verbatim words.
+4. **Open the live URL on a real phone** before sending. Verified at a 375px
+   viewport in an automated browser, but never on actual hardware — and the
+   in-app Browser pane could not take screenshots this session, so nothing was
+   ever confirmed by eye.
 
 **Deliberately NOT done** (all four council members warned against over-engineering
 a single-recipient birthday card): focus traps / `inert` on closed overlays,
@@ -209,3 +212,79 @@ until curl -s https://alexmoschop.github.io/birthday-site/ -o /dev/null -w '%{ht
   offered as options rather than assumed).
 - Wanted the council skill used for review rather than a solo review.
 - Windows 11, PowerShell + Git Bash both available; Python 3.12.10 present.
+
+---
+
+## 10. Phase 2 (media + messages + redeploy)
+
+### Where the media came from
+
+`./media/` did not exist locally — both folders were pulled from Google Drive:
+
+| Drive folder | → | Contents |
+|---|---|---|
+| `Anisa` (owned by Alex) | `media/ANISA/` | 22 photos + 2 clips, ~15 MB |
+| `anisabetterbeimpressed.` (shared by nandinimehrotra05@) | `media/menu-vlogs/` | 4 vlogs, ~1.3 GB |
+
+The vlogs are named after **people** (`Jarred`, `Nandini`, `Prithvish`, plus one
+`VID-…WA0010.mp4`), not dishes. Alex confirmed this is the right folder and asked
+that the menu be labelled "food vlogs".
+
+### Getting the files down — the parts that cost time
+
+- **The Drive MCP caps downloads at 10 MB.** Fine for the photos, useless for the
+  vlogs. Do not retry it for anything large.
+- **Drive MCP results overflow to a file on disk** containing the full base64.
+  That is how the 24 gallery files were fetched without ever putting the bytes in
+  the model's context: call `download_file_content`, then decode the saved JSON
+  with PowerShell. Genuinely useful trick.
+- **The vlogs came via Claude-in-Chrome** (Alex's logged-in browser), which he
+  explicitly approved. Two gotchas:
+  - Files >100 MB hit a "can't scan for viruses" interstitial.
+  - Clicking *Download anyway* and then navigating away **cancels the download**.
+    Navigating straight to
+    `https://drive.usercontent.google.com/download?id=<ID>&export=download&authuser=0&confirm=t`
+    is far more reliable. Wait for each one before starting the next.
+
+### Encoding
+
+`ffmpeg` was **not** installed (as §3 warned) — added via
+`winget install Gyan.FFmpeg`. A reusable, idempotent encode script lives at
+`scratchpad/build-media.ps1` (skips outputs that already exist).
+
+720p / CRF 28 / AAC / `+faststart`, plus a generated poster frame per video.
+Results: 96 MB → 4.1, 189 MB → 6.6, 97 MB → 16.9.
+
+**Nandini needed special handling:** it's 10½ minutes long, so 720p/CRF 28 landed
+at **87 MB** — legal for GitHub but a brutal phone download. Re-encoded alone at
+**480p / CRF 30 → 37 MB**. If you re-run `build-media.ps1`, it will regenerate
+that file at 720p and undo this; delete `assets/menu/nandini.mp4` and use the
+480p command in `README.md` instead.
+
+Photos are **copied, not re-encoded** — already ~230 KB each, and running them
+through ffmpeg risks EXIF-orientation flips for no real gain.
+
+### The bug that would have shipped silently
+
+`index.html` had `media-src 'none'` in its CSP — a leftover from when every video
+was a YouTube iframe. That blocks **every local `<video>`**, and it fails quietly:
+the poster still renders, so the page looks fine and nothing plays. Now `'self'`,
+and `frame-src` is `'none'` since no iframes remain.
+
+Also changed: `.video-wrap` no longer forces `aspect-ratio:16/9`. Three of the
+four vlogs are portrait (406×720), and a 16:9 box pillarboxed them into a tiny
+strip on a phone. The box now takes the clip's own shape, capped at 68vh. The
+"coming soon" fallback keeps 16:9 via `.video-wrap--empty`.
+
+### Verification actually performed
+
+Clicked through end-to-end on the **live URL** at a 375px viewport: menu → each
+vlog loads and plays → note card → gallery (24 items, 0 broken) → lightbox
+(arrows, wrap-around, touch-swipe) → hidden letter (typewriter ran to 280/280,
+sign-off, re-openable). No console errors. All 34 media URLs return 200.
+
+The typewriter had to be driven manually in testing, because
+`prefers-reduced-motion` is ON in the preview browser (§3) and short-circuits it.
+**Screenshots were unavailable all session** — the Browser pane was never
+displayed, so `computer{action:"screenshot"}` timed out every time. Everything
+above was verified through the DOM and the network log, *not by eye*.
