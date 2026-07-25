@@ -10,10 +10,11 @@ Written for whoever (human or model) picks this up next.
 **Live:** https://alexmoschop.github.io/happy-birthday-anisa/
 **Repo:** https://github.com/AlexMoschop/happy-birthday-anisa (public, owner `AlexMoschop`)
 **Local:** `C:\Users\User1\Downloads\birthday-site`
-**Last commit:** `1ef1031` — "phase 3: three more vlogs, renames, recipes removed"
+**Last commit:** `b61d598` — "add elif's note to the menu"
 
-Status: **phase 3 complete.** 7 vlogs + the note card, deployed, verified live on
-a 375px viewport. See §10 for phase 2 and §11 for phase 3.
+Status: **phase 3 complete + elif's note.** 7 vlogs + 2 note cards, deployed,
+verified live on a 375px viewport. See §10 for phase 2, §11 for phase 3, §12 for
+the note.
 
 > The old `birthday-site` repo still exists on GitHub with the placeholder
 > version, and is still wired up as the git remote `old-birthday-site`.
@@ -370,3 +371,28 @@ frames were opened directly from disk and confirmed upright.
 Because the pane never composites, `loading="lazy"` gallery images report
 `naturalWidth === 0` forever. That is the harness, not a broken gallery — the URLs
 were checked over the network instead. Don't chase it.
+
+---
+
+## 12. Elif's note
+
+A second `type: "note"` entry (`elif 💌`), added after om's, verbatim from Alex.
+
+The old comment claimed the note was "the LAST entry" — it never was
+special-cased by position, only by `type`, so notes are just kept at the end of
+`MENU_ITEMS`. Comment corrected; add more freely.
+
+Two things checked because this note is **752 chars — 3.5× om's**:
+
+- **The tilted card doesn't clip on a phone.** `.note-card` is `rotate(-1.6deg)`,
+  so the taller the card the wider its *bounding box* — 356px for a 335px layout
+  box. At 375px it lands at x = 9…366, inside the viewport, and neither the page
+  nor `.overlay__scroll` scrolls horizontally. A much longer note could clip;
+  re-check `scrollWidth > clientWidth` on the scroller if one is ever added.
+- **Turkish + emoji survive the whole pipeline.** `İyi ki doğmuşsunnn` and the
+  curly apostrophes are intact on disk (UTF-8, no BOM) and GitHub Pages serves
+  `script.js` as `application/javascript; charset=utf-8`. `esc()` turns the
+  apostrophes into `&#39;` before `innerHTML`, which renders correctly.
+
+Verified live end-to-end at 375px: 7 vlogs play, both notes render, gallery →
+lightbox → letter all fine, no console output. Screenshots still unavailable (§11).
