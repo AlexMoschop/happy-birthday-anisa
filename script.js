@@ -10,8 +10,9 @@ const FRIEND_NAME = "Anisa";
        Rename `name` and `emoji` freely — they're just labels.
        `video` / `poster` point at the compressed files on disk.
 
-       The LAST entry is special: type "note" shows a handwritten
-       message card instead of a video. --- */
+       An entry with type "note" shows a handwritten message card
+       instead of a video — there can be as many as you like, and
+       they're kept at the end of the list. --- */
 const MENU_ITEMS = [
   { name: "jarred",    emoji: "🍜", video: "assets/menu/jarred.mp4",    poster: "assets/menu/jarred.jpg" },
   { name: "nandini",   emoji: "🍰", video: "assets/menu/nandini.mp4",   poster: "assets/menu/nandini.jpg" },
@@ -24,6 +25,11 @@ const MENU_ITEMS = [
     type: "note",
     name: "om", emoji: "✉️",
     text: "Happy birthday Anisa! I hope you have a great birthday and enjoy your birthday weekend. Thank you for your contributions to the society as ambassador you've been a great help. Good luck with your next year at uni!",
+  },
+  {
+    type: "note",
+    name: "elif", emoji: "💌",
+    text: "Happy birthday Anisaaa!! I wish you all the best with everythinggg and i’m sorry you’re not seeing this message alongside everyone else’s videos. I know i haven’t gotten to know you for that long but i’m glad that i got to meet you and that i get a chance to have your delicioussss cakes🤩🤩 i actually don’t know what you put in them but they are genuinely life changing and so addictive🫠 and the fact that you are making more at the moment means there is even more to try😋 you are so so talented and even working with you with the society has been great! İyi ki doğmuşsunnn🥳 i’ve sprinkled some turkish in there because i know you’d understand a bit🫶 i hope you have a great day and i wish that all great things come your way with your new age 🫶",
   },
 ];
 
